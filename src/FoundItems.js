@@ -25,12 +25,13 @@ const FoundItems = (props) => {
               <a
                 href="#"
                 className="btn btn-sm btn-primary save-book"
-                id="{bookNumber}"
+                id={props?.val}
                 data-toggle="modal tooltip"
                 data-target="#ratingModal"
                 data-placement="top"
                 data-trigger="manual"
                 data-delay='{"show":"500", "hide":"300"}'
+                onClick={props.saveMeth}
               >
                 Save
               </a>

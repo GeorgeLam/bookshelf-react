@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import FoundItems from "./FoundItems";
+import Pagebuttons from "./Pagebuttons";
+
+let booksShown = 0;
 
 class Search extends Component {
   constructor() {
@@ -14,13 +17,17 @@ class Search extends Component {
       url: "",
       startIndex: 0,
       foundItems: 0,
-      booksShown: 0,
       tidied: "",
+      saveMeth: this.save.bind(this),
+      newSave: ""
     };
 
     this.handleSearchInput = this.handleSearchInput.bind(this);
     this.searchBookFunc = this.searchBookFunc.bind(this);
     this.searchAuthorFunc = this.searchAuthorFunc.bind(this);
+    this.navPrev = this.navPrev.bind(this);
+    this.navForward = this.navForward.bind(this);
+    //this.save = this.save.bind(this);
   }
 
   searchBookFunc() {
@@ -36,6 +43,27 @@ class Search extends Component {
     this.searcher();
   }
 
+  navPrev() {
+    if (this.state.startIndex != 0) {
+        this.setState(
+            (prevState) => ({
+                startIndex: prevState.startIndex - 10,
+                loaded: false,
+            }),
+            () => this.searcher()
+            )
+    }
+    
+  }
+  navForward() {
+    this.setState(prevState => ({
+        startIndex: prevState.startIndex + 10,
+        loaded: false
+      }),
+      () => this.searcher()
+    );
+  }
+
   searchAuthorFunc() {
     console.log(this.state.searchInput);
     this.setState(
@@ -44,25 +72,30 @@ class Search extends Component {
         type: "author",
         index: 0,
       }),
-      (() => this.searcher()
-    ));
+      () => this.searcher()
+    );
+  }
+
+  handleSearchInput(e) {
+    e.preventDefault();
+    this.setState({
+      searchInput: e.target.value,
+    });
   }
 
   async searcher() {
-    console.log("SEARCHER FUNC");
     this.setState({
-        searchStatus: "Fetching data...",
-        loaded: false
-    })
-   
+      searchStatus: "Fetching data...",
+      loaded: false,
+    });
 
     if (this.state.searchQuery) {
-         if (this.state.type == "book") {
-           this.state.url = `https://www.googleapis.com/books/v1/volumes?q=${this.state.searchQuery}&startIndex=${this.state.startIndex}`;
-         } else if (this.state.type == "author") {
-           this.state.url = `https://www.googleapis.com/books/v1/volumes?q=+inauthor:${this.state.searchQuery}&startIndex=${this.state.startIndex}`;
-         }
-   
+      if (this.state.type == "book") {
+        this.state.url = `https://www.googleapis.com/books/v1/volumes?q=${this.state.searchQuery}&startIndex=${this.state.startIndex}`;
+      } else if (this.state.type == "author") {
+        this.state.url = `https://www.googleapis.com/books/v1/volumes?q=+inauthor:${this.state.searchQuery}&startIndex=${this.state.startIndex}`;
+      }
+
       let response = await fetch(this.state.url);
       let data = await response.json();
       this.setState({
@@ -77,7 +110,6 @@ class Search extends Component {
   }
 
   tidySearchResults() {
-    console.log(this.state.data.items);
     this.setState({
       tidied: this.state.data.items.map((book) => {
         console.log(book);
@@ -98,19 +130,26 @@ class Search extends Component {
     });
   }
 
-  handleSearchInput(e) {
-      e.preventDefault()
-    //console.log("HANDLE SEARCH FUNC")
-    //console.log(this.state.data.items)
-
-    //if(e){console.log(e.target.value)};
-    this.setState({
-      searchInput: e.target.value,
-    });
+  save(e) {
+      e.preventDefault();
+      console.log(e.target.id)
+      console.log(this.state.data.items[e.target.id].volumeInfo.title);
+      this.setState({
+        newSave: {
+          title: this.state.data.items[e.target.id].volumeInfo.title,
+          author: this.state.data.items[e.target.id].volumeInfo.authors,
+          date: this.state.data.items[e.target.id].volumeInfo.publishedDate,
+          image: this.state.data.items[e.target.id].volumeInfo.imageLinks.smallThumbnail,
+          id: this.state.data.items[e.target.id].id,
+          learnLink: `https://books.google.com/books?id=${
+            this.state.data.items[e.target.id].id}`,
+        },
+      }, console.log(this.state.newSave.title));
   }
 
   render() {
     return (
+    <div>
       <div className="form form-group">
         <div className="row justify-content-center">
           <div className="col-12 col-lg-5">
@@ -145,21 +184,25 @@ class Search extends Component {
             </div>
           </div>
         </div>
+    </div>
+
         <div className="row justify-content-center mb-3" id="item-count">
           {this.state.loaded ? (
             <span>
               Viewing {this.state.startIndex + 1} - {this.state.startIndex + 11}{" "}
               of {this.state.totalItems} items.
             </span>
-          ) : (this.state.searchStatus)}
+          ) : (
+            this.state.searchStatus
+          )}
         </div>
 
         <div className="row">
           <div className="row found-items">
             {this.state.loaded ? (
-              this.state.data.items.map((book) => (
-                <div className="col col-12 col-md-6 py-2" key={book.id}>
-                  <FoundItems book={book.volumeInfo} />
+              this.state.data.items.map((book, index) => (
+                <div className="col col-12 col-md-6 py-2" id={book.id} key={book.id}>
+                  <FoundItems book={book.volumeInfo} val={index} saveMeth={this.state.saveMeth}/>
                 </div>
               ))
             ) : (
@@ -169,70 +212,36 @@ class Search extends Component {
             )}
           </div>
         </div>
+        
+        {(this.state.loaded) && (
+          <div className="row justify-content-center my-3" id="pageButtons">
+            <button
+              className="btn btn-outline-secondary mx-1"
+              type="button"
+              id="previous"
+              href="#top"
+              onClick={this.navPrev}
+            >
+              Previous
+            </button>
+            <button
+              className="btn btn-outline-secondary mx-1"
+              type="button"
+              id="next"
+              href="#top"
+              onClick={this.navForward}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     );
   }
 
-  //searcher(query, startIndex, type){
-  /*console.log(type);
-    if (this.state.type == "book"){
-        url = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}`;
-    } else if (type == "author"){
-        url = `https://www.googleapis.com/books/v1/volumes?q=+inauthor:${query}&startIndex=${startIndex}`;
-    }
-    response = await fetch(url);
-    let data = await response.json();
-    console.log(data);
+  
 
-    document.querySelector("#item-count").innerText = `Viewing ${startIndex+1} - ${startIndex+11} of ${data.totalItems} items.`
-
-    foundItems.innerHTML = "";      //Clearing the page of items before each time func is run
-    
-    bookNumber = -1;
-
-    data.items.forEach(book =>{
-        console.log(bookNumber);
-        try{
-            bookNumber++;
-
-            if(book.volumeInfo.authors.length>1){
-                book.volumeInfo.authors = book.volumeInfo.authors.join(" and ");
-            }
-            if(book.volumeInfo.publishedDate.length>4){
-                book.volumeInfo.publishedDate = book.volumeInfo.publishedDate.toString().slice(0, 4)
-            }
-            if (book.volumeInfo.description.length > 300) {
-                book.volumeInfo.description = book.volumeInfo.description.slice(0, 300) + "...";
-            }
-            
-
-            newBook = document.createElement("DIV")
-            newBook.classList.add("col", "col-12", "col-md-6", "py-2")
-            newBook.innerHTML = `<div class="card h-100">
-                            <div class="row card-body">
-                                <div class="col-8">
-                                    <h5 class="card-title">${book.volumeInfo.title}</h5>
-                                    <p class="card-text">${book.volumeInfo.authors}</p>
-                                    <p class="card-text">${book.volumeInfo.description}</p>
-                                    <a href="https://books.google.com/books?id=${book.id}" target="_blank" class="btn btn-sm btn-primary">Learn More</a>
-                                    <a href="#" class="btn btn-sm btn-primary save-book" id="${bookNumber}"  data-toggle="modal" data-target="#ratingModal" data-toggle="tooltip" data-placement="top"  data-trigger="manual" data-delay='{"show":"500", "hide":"300"}'>Save</a>
-                                </div>
-                                <img class="col-4" src="${book.volumeInfo.imageLinks.smallThumbnail}" alt="sans" />
-                            </div>
-                        </div>`
-            foundItems.appendChild(newBook);
-
-            if (!startIndex == 0) {$("#previous").show()} else { $("#previous").hide()};
-            $("#next").show();
-
-        } catch(e){
-            console.log(e)
-        }
-
-       
-    })
-
-    $(".save-book").click((e) => {
+   /* $(".save-book").click((e) => {
         if (!logInStatus){
             console.log("You're not logged in! Saving is disabled");
             e.stopPropagation();

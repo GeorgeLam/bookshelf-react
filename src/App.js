@@ -14,12 +14,7 @@ function App() {
 
       <div className="container">
         <Subbar />
-
         <Search />
-
-        {/* <FoundItems/> */}
-
-        <Pagebuttons />
       </div>
 
       {/* <!-- end of container --> */}
