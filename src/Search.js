@@ -7,34 +7,111 @@ class Search extends Component {
     this.state = {
       type: "",
       index: 0,
-      data: '',
-      loaded: false
+      data: "",
+      loaded: false,
+      searchQuery: "",
+      searchStatus: "",
+      url: "",
+      startIndex: 0,
+      foundItems: 0,
+      booksShown: 0,
+      tidied: "",
     };
+
+    this.handleSearchInput = this.handleSearchInput.bind(this);
+    this.searchBookFunc = this.searchBookFunc.bind(this);
+    this.searchAuthorFunc = this.searchAuthorFunc.bind(this);
   }
 
-  // searchFunc() {
-  //     this.setState({
-  //         type: 'book',
-  //         index: 0
-  //     })
-  //     //searcher(document.querySelector("#query").value, index, type);
-  // };
+  searchBookFunc() {
+    console.log(this.state.searchInput);
+    this.setState(
+      (prevState) => ({
+        searchQuery: prevState.searchInput,
+        type: "book",
+        index: 0,
+      }),
+      () => this.searcher()
+    );
+    this.searcher();
+  }
 
-  async componentDidMount() {
-    const url = `https://www.googleapis.com/books/v1/volumes?q="1984"&startIndex=0`;
-    let response = await fetch(url);
-    let data = await response.json();
+  searchAuthorFunc() {
+    console.log(this.state.searchInput);
+    this.setState(
+      (prevState) => ({
+        searchQuery: prevState.searchInput,
+        type: "author",
+        index: 0,
+      }),
+      (() => this.searcher()
+    ));
+  }
+
+  async searcher() {
+    console.log("SEARCHER FUNC");
     this.setState({
-        data: data,
-        loaded: true
+        searchStatus: "Fetching data...",
+        loaded: false
     })
-    console.log(this.state.data.items[0]);
-    console.log(this.state.loaded)
+   
+
+    if (this.state.searchQuery) {
+         if (this.state.type == "book") {
+           this.state.url = `https://www.googleapis.com/books/v1/volumes?q=${this.state.searchQuery}&startIndex=${this.state.startIndex}`;
+         } else if (this.state.type == "author") {
+           this.state.url = `https://www.googleapis.com/books/v1/volumes?q=+inauthor:${this.state.searchQuery}&startIndex=${this.state.startIndex}`;
+         }
+   
+      let response = await fetch(this.state.url);
+      let data = await response.json();
+      this.setState({
+        data: data,
+        loaded: true,
+        totalItems: data.totalItems,
+      });
+      console.log(this.state.data.items);
+      console.log(this.state.loaded);
+      this.tidySearchResults();
+    }
+  }
+
+  tidySearchResults() {
+    console.log(this.state.data.items);
+    this.setState({
+      tidied: this.state.data.items.map((book) => {
+        console.log(book);
+        if (book?.volumeInfo?.authors?.length > 1) {
+          console.log(book.volumeInfo.authors);
+          book.volumeInfo.authors = book.volumeInfo.authors.join(" and ");
+        }
+        if (book?.volumeInfo?.publishedDate?.length > 4) {
+          book.volumeInfo.publishedDate = book.volumeInfo.publishedDate
+            .toString()
+            .slice(0, 4);
+        }
+        if (book?.volumeInfo?.description?.length > 300) {
+          book.volumeInfo.description =
+            book.volumeInfo.description.slice(0, 300) + "...";
+        }
+      }),
+    });
+  }
+
+  handleSearchInput(e) {
+      e.preventDefault()
+    //console.log("HANDLE SEARCH FUNC")
+    //console.log(this.state.data.items)
+
+    //if(e){console.log(e.target.value)};
+    this.setState({
+      searchInput: e.target.value,
+    });
   }
 
   render() {
     return (
-      <div className="form form-group ">
+      <div className="form form-group">
         <div className="row justify-content-center">
           <div className="col-12 col-lg-5">
             <div className="input-group mb-3">
@@ -44,13 +121,15 @@ class Search extends Component {
                 id="query"
                 placeholder="Search for..."
                 aria-label="Book search field"
+                value={this.state.searchInput || ""}
+                onChange={this.handleSearchInput}
               ></input>
               <div className="input-group-append">
                 <button
                   className="btn btn-outline-secondary"
                   type="button"
                   id="search-book"
-                  onClick={this.searchFunc}
+                  onClick={this.searchBookFunc}
                 >
                   Book
                 </button>
@@ -58,6 +137,7 @@ class Search extends Component {
                   className="btn btn-outline-secondary"
                   type="button"
                   id="search-author"
+                  onClick={this.searchAuthorFunc}
                 >
                   Author
                 </button>
@@ -65,18 +145,27 @@ class Search extends Component {
             </div>
           </div>
         </div>
-        <div className="row justify-content-center" id="item-count"></div>
+        <div className="row justify-content-center mb-3" id="item-count">
+          {this.state.loaded ? (
+            <span>
+              Viewing {this.state.startIndex + 1} - {this.state.startIndex + 11}{" "}
+              of {this.state.totalItems} items.
+            </span>
+          ) : (this.state.searchStatus)}
+        </div>
 
         <div className="row">
           <div className="row found-items">
             {this.state.loaded ? (
               this.state.data.items.map((book) => (
-                <div class="col col-12 col-md-6 py-2">
+                <div className="col col-12 col-md-6 py-2" key={book.id}>
                   <FoundItems book={book.volumeInfo} />
                 </div>
               ))
             ) : (
-              <p> Loading </p>
+              <div className="col">
+                <p></p>
+              </div>
             )}
           </div>
         </div>
