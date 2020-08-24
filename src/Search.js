@@ -7,6 +7,15 @@ let booksShown = 0;
 class Search extends Component {
   constructor() {
     super();
+
+    this.handleSearchInput = this.handleSearchInput.bind(this);
+    this.searchBookFunc = this.searchBookFunc.bind(this);
+    this.searchAuthorFunc = this.searchAuthorFunc.bind(this);
+    this.navPrev = this.navPrev.bind(this);
+    this.navForward = this.navForward.bind(this);
+    // this.saveMeth = this.saveMeth.bind(this);
+    this.saveMethod = this.saveMethod.bind(this);
+
     this.state = {
       type: "",
       index: 0,
@@ -18,16 +27,11 @@ class Search extends Component {
       startIndex: 0,
       foundItems: 0,
       tidied: "",
-      saveMeth: this.save.bind(this),
-      newSave: ""
+      saveMeth: this.saveMeth,
+      newSave: "",
+      modalShow: false,
+      savedBooks: [],
     };
-
-    this.handleSearchInput = this.handleSearchInput.bind(this);
-    this.searchBookFunc = this.searchBookFunc.bind(this);
-    this.searchAuthorFunc = this.searchAuthorFunc.bind(this);
-    this.navPrev = this.navPrev.bind(this);
-    this.navForward = this.navForward.bind(this);
-    //this.save = this.save.bind(this);
   }
 
   searchBookFunc() {
@@ -41,27 +45,6 @@ class Search extends Component {
       () => this.searcher()
     );
     this.searcher();
-  }
-
-  navPrev() {
-    if (this.state.startIndex != 0) {
-        this.setState(
-            (prevState) => ({
-                startIndex: prevState.startIndex - 10,
-                loaded: false,
-            }),
-            () => this.searcher()
-            )
-    }
-    
-  }
-  navForward() {
-    this.setState(prevState => ({
-        startIndex: prevState.startIndex + 10,
-        loaded: false
-      }),
-      () => this.searcher()
-    );
   }
 
   searchAuthorFunc() {
@@ -112,7 +95,7 @@ class Search extends Component {
   tidySearchResults() {
     this.setState({
       tidied: this.state.data.items.map((book) => {
-        console.log(book);
+        //console.log(book);
         if (book?.volumeInfo?.authors?.length > 1) {
           console.log(book.volumeInfo.authors);
           book.volumeInfo.authors = book.volumeInfo.authors.join(" and ");
@@ -130,67 +113,114 @@ class Search extends Component {
     });
   }
 
-  save(e) {
-      e.preventDefault();
-      console.log(e.target.id)
-      console.log(this.state.data.items[e.target.id].volumeInfo.title);
-      this.setState({
-        newSave: {
-          title: this.state.data.items[e.target.id].volumeInfo.title,
-          author: this.state.data.items[e.target.id].volumeInfo.authors,
-          date: this.state.data.items[e.target.id].volumeInfo.publishedDate,
-          image: this.state.data.items[e.target.id].volumeInfo.imageLinks.smallThumbnail,
-          id: this.state.data.items[e.target.id].id,
-          learnLink: `https://books.google.com/books?id=${
-            this.state.data.items[e.target.id].id}`,
-        },
-      }, console.log(this.state.newSave.title));
+  navPrev() {
+    if (this.state.startIndex != 0) {
+      this.setState(
+        (prevState) => ({
+          startIndex: prevState.startIndex - 10,
+          loaded: false,
+        }),
+        () => this.searcher()
+      );
+    }
+  }
+  navForward() {
+    this.setState(
+      (prevState) => ({
+        startIndex: prevState.startIndex + 10,
+        loaded: false,
+      }),
+      () => this.searcher()
+    );
+  }
+
+  saveMethod(pageBookNum, savedReview, savedRating) {
+    // console.log(pageBookNum, savedReview, savedRating);
+    // console.log(this.state?.data?.items[pageBookNum]);
+    this.setState(
+      (prevState) => {
+        savedBooks: prevState.savedBooks.push({
+          title: this.state.data.items[pageBookNum].volumeInfo.title,
+          author: this.state.data.items[pageBookNum].volumeInfo.authors,
+          date: this.state.data.items[pageBookNum].volumeInfo.publishedDate,
+          image: this.state.data.items[pageBookNum].volumeInfo.imageLinks
+            .smallThumbnail,
+          id: this.state.data.items[pageBookNum].id,
+          learnLink: `https://books.google.com/books?id=${this.state.data.items[pageBookNum].id}`,
+          rating: savedRating,
+          review: savedReview,
+        });
+      }, () => {
+        localStorage.setItem("books", JSON.stringify(this.state.savedBooks));
+      }
+    );
+        
+        
+        
+    //     newSave: {
+    //       title: this.state.data.items[pageBookNum].volumeInfo.title,
+    //       author: this.state.data.items[pageBookNum].volumeInfo.authors,
+    //       date: this.state.data.items[pageBookNum].volumeInfo.publishedDate,
+    //       image: this.state.data.items[pageBookNum].volumeInfo.imageLinks
+    //         .smallThumbnail,
+    //       id: this.state.data.items[pageBookNum].id,
+    //       learnLink: `https://books.google.com/books?id=${this.state.data.items[pageBookNum].id}`,
+    //       rating: savedRating,
+    //       review: savedReview,
+    //     },
+    //     savedBooks: savedBooks.push(this.state.newSave)
+    //   },
+    //   localStorage.setItem("books", JSON.stringify(this.state.savedBooks))
+    //   )
+
+    this.isOpen = false;
   }
 
   render() {
     return (
-    <div>
-      <div className="form form-group">
-        <div className="row justify-content-center">
-          <div className="col-12 col-lg-5">
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                id="query"
-                placeholder="Search for..."
-                aria-label="Book search field"
-                value={this.state.searchInput || ""}
-                onChange={this.handleSearchInput}
-              ></input>
-              <div className="input-group-append">
-                <button
-                  className="btn btn-outline-secondary"
-                  type="button"
-                  id="search-book"
-                  onClick={this.searchBookFunc}
-                >
-                  Book
-                </button>
-                <button
-                  className="btn btn-outline-secondary"
-                  type="button"
-                  id="search-author"
-                  onClick={this.searchAuthorFunc}
-                >
-                  Author
-                </button>
+      <div>
+        <div className="form form-group">
+          <div className="row justify-content-center">
+            <div className="col-12 col-lg-5">
+              <div className="input-group mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="query"
+                  placeholder="Search for..."
+                  aria-label="Book search field"
+                  value={this.state.searchInput || ""}
+                  onChange={this.handleSearchInput}
+                ></input>
+                <div className="input-group-append">
+                  <button
+                    className="btn btn-outline-secondary"
+                    type="button"
+                    id="search-book"
+                    onClick={this.searchBookFunc}
+                  >
+                    Book {this.state.savedBooks.length}
+                  </button>
+                  <button
+                    className="btn btn-outline-secondary"
+                    type="button"
+                    id="search-author"
+                    onClick={this.searchAuthorFunc}
+                  >
+                    Author
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-    </div>
 
         <div className="row justify-content-center mb-3" id="item-count">
           {this.state.loaded ? (
             <span>
               Viewing {this.state.startIndex + 1} - {this.state.startIndex + 11}{" "}
-              of {this.state.totalItems} items.
+              of {this.state.totalItems} items.{" "}
+              {this?.state?.savedBooks[0]?.title}
             </span>
           ) : (
             this.state.searchStatus
@@ -201,8 +231,16 @@ class Search extends Component {
           <div className="row found-items">
             {this.state.loaded ? (
               this.state.data.items.map((book, index) => (
-                <div className="col col-12 col-md-6 py-2" id={book.id} key={book.id}>
-                  <FoundItems book={book.volumeInfo} val={index} saveMeth={this.state.saveMeth}/>
+                <div
+                  className="col col-12 col-md-6 py-2"
+                  id={book.id}
+                  key={book.id}
+                >
+                  <FoundItems
+                    book={book.volumeInfo}
+                    val={index}
+                    saveMeth={this.saveMethod}
+                  />
                 </div>
               ))
             ) : (
@@ -212,8 +250,8 @@ class Search extends Component {
             )}
           </div>
         </div>
-        
-        {(this.state.loaded) && (
+
+        {this.state.loaded && (
           <div className="row justify-content-center my-3" id="pageButtons">
             <button
               className="btn btn-outline-secondary mx-1"
@@ -239,9 +277,7 @@ class Search extends Component {
     );
   }
 
-  
-
-   /* $(".save-book").click((e) => {
+  /* $(".save-book").click((e) => {
         if (!logInStatus){
             console.log("You're not logged in! Saving is disabled");
             e.stopPropagation();
