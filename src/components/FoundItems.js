@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
-
 import SaveModal from "./SaveModal"
-
 
 const FoundItems = (props) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [savingNum, setSavingNum] = React.useState("");
-  const [rating, handleRating] = React.useState(0);
+  const [rating, handleRating] = React.useState(1);
   const [review, handleReview] = React.useState("");
 
   const showModal = (e) => {
@@ -59,7 +57,7 @@ const FoundItems = (props) => {
         {
           <img
             className="col-4"
-            src={props?.book?.imageLinks?.smallThumbnail}
+            src={props?.book?.imageLinks?.smallThumbnail || props?.book?.imageLinks}
             alt="sans"
           />
         }
@@ -82,7 +80,7 @@ const FoundItems = (props) => {
             ></textarea>
           </div>
           <div className="form-group">
-            <label htmlFor="rating">Rating: {review} </label>
+            <label htmlFor="rating">Rating: </label>
             <select name="rating" id="bookRating" value={rating} onChange={e => handleRating(e.target.value)}>
               <option value="1">1/5</option>
               <option value="2">2/5</option>
@@ -98,7 +96,7 @@ const FoundItems = (props) => {
             className="btn btn-primary saveRating"
             onClick={() => {
               props.saveMeth(savingNum, review, rating);
-              // setIsOpen(false)
+              setIsOpen(false)
             }
           }
           >

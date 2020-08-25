@@ -27,10 +27,8 @@ class Search extends Component {
       startIndex: 0,
       foundItems: 0,
       tidied: "",
-      saveMeth: this.saveMeth,
       newSave: "",
-      modalShow: false,
-      savedBooks: [],
+      savedBooks: JSON.parse(localStorage.getItem('books')) || [],
     };
   }
 
@@ -135,15 +133,13 @@ class Search extends Component {
   }
 
   saveMethod(pageBookNum, savedReview, savedRating) {
-    // console.log(pageBookNum, savedReview, savedRating);
-    // console.log(this.state?.data?.items[pageBookNum]);
     this.setState(
       (prevState) => {
         savedBooks: prevState.savedBooks.push({
           title: this.state.data.items[pageBookNum].volumeInfo.title,
-          author: this.state.data.items[pageBookNum].volumeInfo.authors,
+          authors: this.state.data.items[pageBookNum].volumeInfo.authors,
           date: this.state.data.items[pageBookNum].volumeInfo.publishedDate,
-          image: this.state.data.items[pageBookNum].volumeInfo.imageLinks
+          imageLinks: this.state.data.items[pageBookNum].volumeInfo.imageLinks
             .smallThumbnail,
           id: this.state.data.items[pageBookNum].id,
           learnLink: `https://books.google.com/books?id=${this.state.data.items[pageBookNum].id}`,
@@ -154,25 +150,6 @@ class Search extends Component {
         localStorage.setItem("books", JSON.stringify(this.state.savedBooks));
       }
     );
-        
-        
-        
-    //     newSave: {
-    //       title: this.state.data.items[pageBookNum].volumeInfo.title,
-    //       author: this.state.data.items[pageBookNum].volumeInfo.authors,
-    //       date: this.state.data.items[pageBookNum].volumeInfo.publishedDate,
-    //       image: this.state.data.items[pageBookNum].volumeInfo.imageLinks
-    //         .smallThumbnail,
-    //       id: this.state.data.items[pageBookNum].id,
-    //       learnLink: `https://books.google.com/books?id=${this.state.data.items[pageBookNum].id}`,
-    //       rating: savedRating,
-    //       review: savedReview,
-    //     },
-    //     savedBooks: savedBooks.push(this.state.newSave)
-    //   },
-    //   localStorage.setItem("books", JSON.stringify(this.state.savedBooks))
-    //   )
-
     this.isOpen = false;
   }
 
@@ -199,7 +176,7 @@ class Search extends Component {
                     id="search-book"
                     onClick={this.searchBookFunc}
                   >
-                    Book {this.state.savedBooks.length}
+                    Book {this?.state?.savedBooks?.length}
                   </button>
                   <button
                     className="btn btn-outline-secondary"
@@ -219,8 +196,7 @@ class Search extends Component {
           {this.state.loaded ? (
             <span>
               Viewing {this.state.startIndex + 1} - {this.state.startIndex + 11}{" "}
-              of {this.state.totalItems} items.{" "}
-              {this?.state?.savedBooks[0]?.title}
+              of {this.state.totalItems} items.
             </span>
           ) : (
             this.state.searchStatus
@@ -276,107 +252,6 @@ class Search extends Component {
       </div>
     );
   }
-
-  /* $(".save-book").click((e) => {
-        if (!logInStatus){
-            console.log("You're not logged in! Saving is disabled");
-            e.stopPropagation();
-            e.preventDefault();
-
-            $(function () { //Showing tooltips on 'save' click
-                    $(`#${e.target.id}`).tooltip({ "title": "Log in to save books" });
-                    $(`#${e.target.id}`).tooltip('show');
-                }
-            )
-
-        } else{
-            currentlySaving = "";
-            currentlySaving = data.items[e.target.id].id;
-            duplicate = 0;
-            e.preventDefault();
-            //console.log(data.items[e.target.id].volumeInfo);
-            //console.log(JSON.parse(savedBooks));
-
-            newBook = {
-                "title": data.items[e.target.id].volumeInfo.title,
-                "author": data.items[e.target.id].volumeInfo.authors,
-                "date": data.items[e.target.id].volumeInfo.publishedDate,
-                "image": data.items[e.target.id].volumeInfo.imageLinks.smallThumbnail,
-                "id": data.items[e.target.id].id,
-                "learnLink": `https://books.google.com/books?id=${data.items[e.target.id].id}`
-            };
-
-            
-
-            savedBooks.forEach(book => {                //Ensuring no duplicates in localstorage
-            if(_.isEqual(book, newBook)){
-                console.log("Duplicate found");
-                duplicate = 1;}
-            });
-
-            $(function () {                             //Showing tooltips on 'save' click
-                if (duplicate){
-                    console.log(duplicate);
-                    $(`#${e.target.id}`).tooltip({ "title": "Already saved!" });
-                    $(`#${e.target.id}`).tooltip('show');
-                } 
-            })
-
-            
-            $(`#${e.target.id}`).removeClass("btn-primary");
-            $(`#${e.target.id}`).addClass("btn-success");
-            $(`#${e.target.id}`).text("Saved");
-
-            if (!duplicate){savedBooks.push(newBook)};
-
-            $("#bookRating").val("");
-            $("#bookReview").val("");
-
-            $(".saveRating").click(() => {
-              
-                console.log(currentlySaving)
-                rating = ""; review = "";
-                console.log($("#bookRating").val())
-                console.log($("#bookReview").val())
-                rating = $("#bookRating").val();
-                review = $("#bookReview").val();
-                savedBooks.forEach(book => {
-                    //console.log(book.id);
-                    if (book.id == currentlySaving){
-                        console.log("Found the book!")
-                        book["rating"] = rating;
-                        book["review"] = review;
-                        console.log(savedBooks);
-                        writeToDB();
-                    }
-                })
-            })
-
-            localStorage.setItem('books', JSON.stringify(savedBooks));
-            console.log(savedBooks);
-
-
-            writeToDB = () => {
-                firebase.auth().onAuthStateChanged(function (user) {
-                    if (user) {
-                        db.collection("users").doc(`${user.displayName}`).set({
-                            books: JSON.stringify(savedBooks)
-                        })
-                            .then(function () {
-                                console.log("Document successfully written!");
-                            })
-                            .catch(function (error) {
-                                console.error("Error writing document: ", error);
-                            });
-                    }
-                })
-            }
-
-            writeToDB();
-        }
-    });
-    )
-*/
 };
 
 export default Search;
