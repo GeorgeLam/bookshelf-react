@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Subbar from './components/Subbar'
-import FoundItems from './components/FoundItems'
+import SavedItems from './components/SavedItems'
 
 class Saved extends Component {
     constructor() {
@@ -15,7 +15,7 @@ class Saved extends Component {
     render() {
         return (
             <div className="container">
-                <Subbar/>
+                <Subbar title="Saved Books"/>
                 {/* <div className="row justify-content-center mb-3" id="item-count">
                     {this.state.loaded ? (
                         <span>
@@ -36,7 +36,7 @@ class Saved extends Component {
                                     id={book.id}
                                     key={book.id}
                                 >
-                                    <FoundItems
+                                    <SavedItems
                                         book={book}
                                         val={index}
                                         saveMeth={this.saveMethod}

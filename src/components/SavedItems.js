@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import SaveModal from "./SaveModal"
 
-const FoundItems = (props) => {
+const SavedItems = (props) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [savingNum, setSavingNum] = React.useState("");
-  const [rating, handleRating] = React.useState("You have not rated this book.");
+  const [rating, handleRating] = React.useState(1);
   const [review, handleReview] = React.useState("");
+  const [ratingConvert, handleRatingConv] = React.useState("");
 
   const showModal = (e) => {
     e.preventDefault();
@@ -32,16 +33,13 @@ const FoundItems = (props) => {
           <h5 className="card-title">{props?.book?.title}</h5>
           <p className="card-text">{props?.book?.authors}</p>
           <p className="card-text">{props?.book?.description}</p>
-          <a
-            href={props?.book?.infoLink}
-            target="_blank"
-            className="btn btn-sm btn-primary mr-2"
-          >
-            Learn More
-          </a>
+          <p class="rating" id="rating${counter}">{props?.book?.rating}</p>
+          <p class="review" id="review${counter}"><strong>Your review:</strong><br />{props?.book?.review}</p>
+          <a href="#" className="btn btn-sm btn-primary edit-book" id="edit${book.id}" data-toggle="modal" data-target="#ratingModal">Edit</a>
+          <a href="#" className="btn btn-sm btn-primary unsave-book ml-1" id="${book.id}">Remove</a>
           <a
             href="#"
-            className="btn btn-sm btn-primary save-book"
+            className="btn btn-sm btn-primary save-book ml-1"
             id={props?.val}
             // data-toggle="modal tooltip"
             // data-target="#ratingModal"
@@ -81,7 +79,7 @@ const FoundItems = (props) => {
           </div>
           <div className="form-group">
             <label htmlFor="rating">Rating: </label>
-            <select name="rating" id="bookRating" value={rating} onChange={e => handleRating(`You rated this book ${e.target.value}/5.`)}>
+            <select name="rating" id="bookRating" value={rating} onChange={e => handleRating(e.target.value)}>
               <option value="1">1/5</option>
               <option value="2">2/5</option>
               <option value="3">3/5</option>
@@ -117,4 +115,4 @@ const FoundItems = (props) => {
   );
 };
 
-export default FoundItems;
+export default SavedItems;
