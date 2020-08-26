@@ -3,6 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 import Home from './Home';
 import Saved from './Saved'
+
+import userProvider from "./components/userProvider";
 import Topbar from './components/Topbar'
 import Subbar from './components/Subbar'
 import Search from "./components/Search";
@@ -30,62 +32,6 @@ function App() {
         <Route path="/" exact component={Home} />
         <Route path="/saved" component={Saved}/>
 
-        {/* <Search /> */}
-        {/* <!-- end of container --> */}
-
-        {/* <!-- book rating modal --> */}
-
-        {/* <div
-        className="modal fade"
-        id="ratingModal"
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="ratingModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-body">
-              <div className="form-group">
-                <label htmlFor="book-review">Review</label>
-                <textarea
-                  name="book-review"
-                  className="form-control"
-                  id="bookReview"
-                  aria-describedby="book-review"
-                  value=""
-                ></textarea>
-              </div>
-              <div className="form-group">
-                <label htmlFor="rating">Rating: </label>
-                <select name="rating" id="bookRating">
-                  <option value="1">1/5</option>
-                  <option value="2">2/5</option>
-                  <option value="3">3/5</option>
-                  <option value="4">4/5</option>
-                  <option value="5">5/5</option>
-                </select>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-primary saveRating"
-                data-dismiss="modal"
-              >
-                Save rating
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-dismiss="modal"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      </div> */}
 
         {/* <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS --> */}
@@ -103,13 +49,26 @@ function App() {
         <script src="./lodash-min.js"></script>
         {/* <!-- <script src="env.js"></script> --> */}
 
+
+
         {/* <!-- The core Firebase JS SDK is always required and must be listed first --> */}
-        <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+    {/* <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script> */}
+
+        {/* <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries --> */}
+    {/* <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js"></script> */}
+
+       {/* <script src="./firebase.js"></script> */}
+
+        {/* <!-- The core Firebase JS SDK is always required and must be listed first --> */}
+        {/* <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script> */}
 
         {/* <!-- TODO: Add SDKs for Firebase products that you want to use */}
-        <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js"></script>
+        {/* <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js"></script> */}
 
         <script src="./app.js"></script>
       </div>

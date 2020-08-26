@@ -6,6 +6,8 @@ import Tabs from "react-bootstrap/Tabs";
 const AccModal = (props) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
+
+
   return (
     <div>
       <Modal show={props.isOpen}>
@@ -43,6 +45,7 @@ const AccModal = (props) => {
                       type="submit"
                       className="btn btn-primary"
                       id="sign-in-btn"
+                      onClick={props.signIn}
                     >
                       Sign in
                     </button>
@@ -98,6 +101,7 @@ const AccModal = (props) => {
                     type="submit"
                     className="btn btn-primary"
                     id="account-action-btn"
+                    onClick={props.signUp}
                   >
                     Sign up
                   </button>
