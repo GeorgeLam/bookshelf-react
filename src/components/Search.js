@@ -139,7 +139,7 @@ class Search extends Component {
           title: this.state.data.items[pageBookNum].volumeInfo.title,
           authors: this.state.data.items[pageBookNum].volumeInfo.authors,
           date: this.state.data.items[pageBookNum].volumeInfo.publishedDate,
-          imageLinks: this.state.data.items[pageBookNum].volumeInfo.imageLinks
+          image: this.state.data.items[pageBookNum].volumeInfo.imageLinks
             .smallThumbnail,
           id: this.state.data.items[pageBookNum].id,
           learnLink: `https://books.google.com/books?id=${this.state.data.items[pageBookNum].id}`,

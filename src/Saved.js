@@ -6,10 +6,45 @@ class Saved extends Component {
     constructor() {
         super()
 
+        this.removeItem = this.removeItem.bind(this);
+        this.updateMeth = this.updateMeth.bind(this);
+
         this.state = {
             savedBooks: JSON.parse(localStorage.getItem('books')) || [],
             loaded: true,
         }
+    }
+
+    updateMeth(targetBook, rev, rating) {
+        console.log("Update meth");
+        console.log(targetBook, rev, rating);
+        let alterBooks = this.state.savedBooks;
+        alterBooks.forEach(book => {
+            if (book.id == targetBook) {
+                console.log("Found the book: " + targetBook);
+                console.log(book.review);
+                book.review = rev;
+                book.rating = `You rated this book ${rating}/5.`;
+                console.log(book);
+            }
+        })
+        this.setState({ savedBooks: alterBooks },
+            () => {
+                localStorage.setItem('books', JSON.stringify(this.state.savedBooks))
+            }
+        )
+
+    }
+
+    removeItem(e) {
+        e.preventDefault();
+        let alterBooks = this.state.savedBooks;
+        alterBooks = alterBooks.filter(book => book.id != e.target.id)
+        this.setState({savedBooks: alterBooks},
+            () => {
+                localStorage.setItem('books', JSON.stringify(this.state.savedBooks))
+            }
+        )
     }
 
     render() {
@@ -36,16 +71,19 @@ class Saved extends Component {
                                     id={book.id}
                                     key={book.id}
                                 >
+                                    <p></p>
+
                                     <SavedItems
                                         book={book}
                                         val={index}
-                                        saveMeth={this.saveMethod}
+                                        updateMeth={this.updateMeth}
+                                        removeMeth={this.removeItem}
                                     />
                                 </div>
                             ))
                         ) : (
                                 <div className="col">
-                                    <p></p>
+                                    <p>HELLLLLOOOO {this.state.savedBooks.length}</p>
                                 </div>
                             )}
                     </div>
