@@ -8,7 +8,9 @@ import Tabs from "react-bootstrap/Tabs";
 
 const Topbar = (props) => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [currentUser, setCurrentUser] = React.useState("No user");
+  const [currentUser, setCurrentUser] = React.useState(
+    firebase.auth().currentUser?.email
+  );
 
   const showModal = (e) => {
     e.preventDefault();
@@ -44,6 +46,8 @@ function handleSignUp(e) {
   }
   // Create user with email and pass.
   // [START createwithemail]
+
+  //Sign-up meets requirements -> account creation:
   firebase
     .auth()
     .createUserWithEmailAndPassword(email, password)
@@ -54,18 +58,16 @@ function handleSignUp(e) {
     })
     .then(() => {
       const newUser = firebase.auth().currentUser;
-      setCurrentUser(firebase.auth().currentUser);
+      // setCurrentUser(firebase.auth().currentUser);
+      console.log(firebase.auth().currentUser);
+      setIsOpen(false);
+
       firebase.firestore().collection("users")
         .doc(`${newUser.displayName}`)
         .set({
           username: newUser.displayName,
           email: newUser.email,
-          // books: JSON.stringify(savedBooks),
         })
-
-        // .then(function (docRef) {
-        //     console.log("Document written with ID: ", docRef.id);
-        // })
         .catch(function (error) {
           console.error("Error adding document: ", error);
         });
@@ -107,8 +109,8 @@ function handleSignUp(e) {
       // [END_EXCLUDE]
     });
     //console.log("logged in!")
-    authCheck();
-
+    //authCheck();
+    setIsOpen(false);
   }
 
 
@@ -120,9 +122,9 @@ let handleSignOut = () => {
       console.log("Signed Out"); // Sign-out successful.
       // $("#my-acc").text("Log In");
       // $("#my-acc").attr("data-target", "#accountModal");
-      setCurrentUser("No current user");
-      console.log(currentUser);
-
+      //setCurrentUser("No current user");
+      //console.log(currentUser);
+      //authCheck();
       // localStorage.setItem(`books`, "[]");
       // console.log("rewriting LS bc hLO func");
       // window.location.href = "./index.html";
@@ -134,41 +136,32 @@ let handleSignOut = () => {
 }
 
 
-let authCheck = () => {
-  console.log("AUTH CHECK FUNC")
-  firebase.auth().onAuthStateChanged(async function (user) {
+
+  firebase.auth().onAuthStateChanged(function (user) {
     console.log(user?.email);
     if (user) {
       console.log("Successful log-in!")
       console.log(firebase.auth().currentUser);
-      setCurrentUser(user?.email);
+      // setCurrentUser(user?.email);
 
-      // User is signed in.
-      let logInStatus = 1;
-      console.log(logInStatus, user.email)
-      let uName = await user.displayName;
-
-      var displayName = user.displayName;
-      var email = user.email;
-      var emailVerified = user.emailVerified;
-      var photoURL = user.photoURL;
-      var isAnonymous = user.isAnonymous;
-      var uid = user.uid;
-      var providerData = user.providerData;
+      // // User is signed in.
+      // let logInStatus = 1;
+      // console.log(logInStatus, user.email)
+      // let uName = await user.displayName;
       // ...
     } else {
 
       // $("#acc-status").text(`You're not logged in`);
       console.log("Not logged in");
+      setCurrentUser("Not logged in")
       let logInStatus = 0;
       // User is signed out.
       // ...
     }
   });
-};
 
 window.onload = function () {
-  authCheck();
+  //authCheck();
 };
 
     return (
@@ -196,7 +189,7 @@ window.onload = function () {
             Sign out
           </a>
           <span id="acc-status" className="mx-1">
-            Logged in as {currentUser}
+            {firebase.auth().currentUser ? `Logged in as ${currentUser}` : "Not logged in"}
           </span>
         </div>
 
@@ -212,7 +205,5 @@ window.onload = function () {
       </div>
     );
 };
-
-
 
 export default Topbar;
