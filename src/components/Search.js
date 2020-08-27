@@ -1,99 +1,203 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect, useContext } from "react";
 import FoundItems from "./FoundItems";
 import Pagebuttons from "./Pagebuttons";
+import {AccContext} from "./AccContext";
 
 let booksShown = 0;
 
-class Search extends Component {
-  constructor() {
-    super();
 
-    this.handleSearchInput = this.handleSearchInput.bind(this);
-    this.searchBookFunc = this.searchBookFunc.bind(this);
-    this.searchAuthorFunc = this.searchAuthorFunc.bind(this);
-    this.navPrev = this.navPrev.bind(this);
-    this.navForward = this.navForward.bind(this);
-    // this.saveMeth = this.saveMeth.bind(this);
-    this.saveMethod = this.saveMethod.bind(this);
 
-    this.state = {
-      type: "",
-      index: 0,
-      data: "",
-      loaded: false,
-      searchQuery: "",
-      searchStatus: "",
-      url: "",
-      startIndex: 0,
-      foundItems: 0,
-      tidied: "",
-      newSave: "",
-      savedBooks: JSON.parse(localStorage.getItem('books')) || [],
-    };
+const Search = () => {
+    const { accStatus, setAccStatus } = useContext(AccContext);
+
+    // this.handleSearchInput = this.handleSearchInput.bind(this);
+    // this.searchBookFunc = this.searchBookFunc.bind(this);
+    // this.searchAuthorFunc = this.searchAuthorFunc.bind(this);
+    // this.navPrev = this.navPrev.bind(this);
+    // this.navForward = this.navForward.bind(this);
+    // // this.saveMeth = this.saveMeth.bind(this);
+    // this.saveMethod = this.saveMethod.bind(this);
+
+
+    let [type, setType] = useState("");
+    let [index, setIndex] = useState(0);
+    let [data, setData] = useState("");
+    let [loaded, setLoaded] = useState(false);
+    let [searchQuery, setSearchQuery] = useState("");
+    let [searchInput, setSearchInput] = useState("");
+    let [searchStatus, setSearchStatus] = useState("");
+    let [url, setUrl] = useState("");
+    let [startIndex, setStartIndex] = useState(0);
+    let [foundItems, setFoundItems] = useState(0);
+    let [totalItems, setTotalItems] = useState(0);
+    let [readyToTidy, setReadyToTidy] = useState();
+    let [tidied, setTidied] = useState("");
+    let [newSave, setNewSave] = useState("");
+    let [savedBooks, setSavedBooks] = useState(JSON.parse(localStorage.getItem('books')) || []);
+   
+
+  //   this.state = {
+  //     type: "",
+  //     index: 0,
+  //     data: "",
+  //     loaded: false,
+  //     searchQuery: "",
+  //     searchStatus: "",
+  //     url: "",
+  //     startIndex: 0,
+  //     foundItems: 0,
+  //     tidied: "",
+  //     newSave: "",
+  //     savedBooks: JSON.parse(localStorage.getItem('books')) || [],
+  //   };
+  // }
+
+  let searchBookFunc = () => {
+    console.log(searchInput);
+    setSearchQuery(searchInput);
+    setType("book");
+    setIndex(0)
+    //searcher();
+
+    // this.setState(
+    //   (prevState) => ({
+    //     searchQuery: prevState.searchInput,
+    //     type: "book",
+    //     index: 0,
+    //   }),
+    //   () => this.searcher()
+    // );
+    // this.searcher();
   }
 
-  searchBookFunc() {
-    console.log(this.state.searchInput);
-    this.setState(
-      (prevState) => ({
-        searchQuery: prevState.searchInput,
-        type: "book",
-        index: 0,
-      }),
-      () => this.searcher()
-    );
-    this.searcher();
+    useEffect(() => {
+      if(type){
+        setUrl(`https://www.googleapis.com/books/v1/volumes?q=${searchInput}&startIndex=${startIndex}`)}}, [type, index, searchQuery, startIndex])
+
+    useEffect(() => {
+      console.log(url);
+      // setUrl(`https://www.googleapis.com/books/v1/volumes?q=${searchInput}&startIndex=${startIndex}`);
+      // searcher();
+      if(url) searcher();
+
+    }, [url]);
+
+
+  let searchAuthorFunc = () => {
+    // console.log(this.state.searchInput);
+    console.log(searchInput)
+    setSearchQuery(searchInput);
+    setType("author");
+    setIndex(0);
+    searcher();
+
+
+    // this.setState(
+    //   (prevState) => ({
+    //     searchQuery: prevState.searchInput,
+    //     type: "author",
+    //     index: 0,
+    //   }),
+    //   () => this.searcher()
+    // );
   }
 
-  searchAuthorFunc() {
-    console.log(this.state.searchInput);
-    this.setState(
-      (prevState) => ({
-        searchQuery: prevState.searchInput,
-        type: "author",
-        index: 0,
-      }),
-      () => this.searcher()
-    );
-  }
-
-  handleSearchInput(e) {
+  let handleSearchInput = (e) => {
     e.preventDefault();
-    this.setState({
-      searchInput: e.target.value,
-    });
+    setSearchInput(e.target.value);
+
+    // this.setState({
+    //   searchInput: e.target.value,
+    // });
   }
 
-  async searcher() {
-    this.setState({
-      searchStatus: "Fetching data...",
-      loaded: false,
-    });
+  let searcher = async () => {
+    console.log("Search func")
+    setSearchStatus("Fetching data...");
+    setLoaded(false)
+    console.log(searchInput);
 
-    if (this.state.searchQuery) {
-      if (this.state.type == "book") {
-        this.state.url = `https://www.googleapis.com/books/v1/volumes?q=${this.state.searchQuery}&startIndex=${this.state.startIndex}`;
-      } else if (this.state.type == "author") {
-        this.state.url = `https://www.googleapis.com/books/v1/volumes?q=+inauthor:${this.state.searchQuery}&startIndex=${this.state.startIndex}`;
+    // this.setState({
+    //   searchStatus: "Fetching data...",
+    //   loaded: false,
+    // }
+  
+
+    if (searchInput) {
+      if (type == "book") {
+        console.log("type is book", searchQuery, startIndex)
+        // setUrl(`https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&startIndex=${startIndex}`);
+      } else if (type == "author") {
+        setUrl(`https://www.googleapis.com/books/v1/volumes?q=+inauthor:${searchQuery}&startIndex=${startIndex}`);
       }
 
-      let response = await fetch(this.state.url);
-      let data = await response.json();
-      this.setState({
-        data: data,
-        loaded: true,
-        totalItems: data.totalItems,
-      });
-      console.log(this.state.data.items);
-      console.log(this.state.loaded);
-      this.tidySearchResults();
-    }
-  }
+      console.log(url)
 
-  tidySearchResults() {
-    this.setState({
-      tidied: this.state.data.items.map((book) => {
-        //console.log(book);
+      let response = await fetch(url);
+      //let data = await response.json();
+      console.log(data);
+      setData(await response.json());
+      setLoaded(true);
+      setTotalItems(data.totalItems)
+
+      // this.setState({
+      //   data: data,
+      //   loaded: true,
+      //   totalItems: data.totalItems,
+      // });
+      console.log(data.items);
+      console.log(loaded);
+      setReadyToTidy(true);
+      // let catsup = data.items.map((book) => {
+      //   console.log(book);
+      //   if (book?.volumeInfo?.authors?.length > 1) {
+      //     console.log(book.volumeInfo.authors);
+      //     book.volumeInfo.authors = book.volumeInfo.authors.join(" and ");
+      //   }
+      //   if (book?.volumeInfo?.publishedDate?.length > 4) {
+      //     book.volumeInfo.publishedDate = book.volumeInfo.publishedDate
+      //       .toString()
+      //       .slice(0, 4);
+      //   }
+      //   if (book?.volumeInfo?.description?.length > 300) {
+      //     book.volumeInfo.description =
+      //       book.volumeInfo.description.slice(0, 300) + "...";
+      //   }
+      // })
+      
+      // console.log(catsup);
+      }
+    }
+
+    // useEffect(() => {
+    //   data && setReadyToTidy(true)
+    // }, [data])
+
+  // let tidySearchResults = () => {
+  //   setTidied(data.items.map((book) => {
+  //       console.log(book);
+  //       if (book?.volumeInfo?.authors?.length > 1) {
+  //         console.log(book.volumeInfo.authors);
+  //         book.volumeInfo.authors = book.volumeInfo.authors.join(" and ");
+  //       }
+  //       if (book?.volumeInfo?.publishedDate?.length > 4) {
+  //         book.volumeInfo.publishedDate = book.volumeInfo.publishedDate
+  //           .toString()
+  //           .slice(0, 4);
+  //       }
+  //       if (book?.volumeInfo?.description?.length > 300) {
+  //         book.volumeInfo.description =
+  //           book.volumeInfo.description.slice(0, 300) + "...";
+  //       }
+  //     })
+  //   )
+  // }
+
+  useEffect(() => {
+    console.log("Check")
+    if (data) {
+      setTidied(data.items.map((book) => {
+        console.log(book);
         if (book?.volumeInfo?.authors?.length > 1) {
           console.log(book.volumeInfo.authors);
           book.volumeInfo.authors = book.volumeInfo.authors.join(" and ");
@@ -107,53 +211,102 @@ class Search extends Component {
           book.volumeInfo.description =
             book.volumeInfo.description.slice(0, 300) + "...";
         }
-      }),
-    });
-  }
+      }))
+    }
+  }, [data])
 
-  navPrev() {
-    if (this.state.startIndex != 0) {
-      this.setState(
-        (prevState) => ({
-          startIndex: prevState.startIndex - 10,
-          loaded: false,
-        }),
-        () => this.searcher()
-      );
+
+  //   this.setState({
+  //     tidied: this.state.data.items.map((book) => {
+  //       //console.log(book);
+  //       if (book?.volumeInfo?.authors?.length > 1) {
+  //         console.log(book.volumeInfo.authors);
+  //         book.volumeInfo.authors = book.volumeInfo.authors.join(" and ");
+  //       }
+  //       if (book?.volumeInfo?.publishedDate?.length > 4) {
+  //         book.volumeInfo.publishedDate = book.volumeInfo.publishedDate
+  //           .toString()
+  //           .slice(0, 4);
+  //       }
+  //       if (book?.volumeInfo?.description?.length > 300) {
+  //         book.volumeInfo.description =
+  //           book.volumeInfo.description.slice(0, 300) + "...";
+  //       }
+  //     }),
+  //   });
+  // }
+
+  let navPrev = () => {
+    if (startIndex != 0) {
+      setStartIndex(startIndex - 10);
+      setLoaded(false)
+      searcher();
+      // this.setState(
+      //   (prevState) => ({
+      //     startIndex: prevState.startIndex - 10,
+      //     loaded: false,
+      //   }),
+      //   () => this.searcher()
+      // );
     }
   }
-  navForward() {
-    this.setState(
-      (prevState) => ({
-        startIndex: prevState.startIndex + 10,
-        loaded: false,
-      }),
-      () => this.searcher()
-    );
+
+  let navForward = () => {
+    console.log("Forward");
+    setStartIndex(startIndex + 10);
+    setLoaded(false);
+    searcher();
+
+    // this.setState(
+    //   (prevState) => ({
+    //     startIndex: prevState.startIndex + 10,
+    //     loaded: false,
+    //   }),
+    //   () => this.searcher()
+    // );
   }
 
-  saveMethod(pageBookNum, savedReview, savedRating) {
-    this.setState(
-      (prevState) => {
-        savedBooks: prevState.savedBooks.push({
-          title: this.state.data.items[pageBookNum].volumeInfo.title,
-          authors: this.state.data.items[pageBookNum].volumeInfo.authors,
-          date: this.state.data.items[pageBookNum].volumeInfo.publishedDate,
-          image: this.state.data.items[pageBookNum].volumeInfo.imageLinks
+  let saveMethod = (pageBookNum, savedReview, savedRating) => {
+    if(accStatus) console.log("yup you're logged in")
+    setSavedBooks(
+      savedBooks.push(
+        {
+          title: data.items[pageBookNum].volumeInfo.title,
+          authors: data.items[pageBookNum].volumeInfo.authors,
+          date: data.items[pageBookNum].volumeInfo.publishedDate,
+          image: data.items[pageBookNum].volumeInfo.imageLinks
             .smallThumbnail,
-          id: this.state.data.items[pageBookNum].id,
-          learnLink: `https://books.google.com/books?id=${this.state.data.items[pageBookNum].id}`,
+          id: data.items[pageBookNum].id,
+          learnLink: `https://books.google.com/books?id=${data.items[pageBookNum].id}`,
           rating: savedRating,
           review: savedReview,
-        });
-      }, () => {
-        localStorage.setItem("books", JSON.stringify(this.state.savedBooks));
-      }
-    );
-    this.isOpen = false;
+        }
+      )
+    )
+
+    localStorage.setItem("books", JSON.stringify(savedBooks));
+    // setIsOpen(false);
+
+    // this.setState(
+    //   (prevState) => {
+    //     savedBooks: prevState.savedBooks.push({
+    //       title: this.state.data.items[pageBookNum].volumeInfo.title,
+    //       authors: this.state.data.items[pageBookNum].volumeInfo.authors,
+    //       date: this.state.data.items[pageBookNum].volumeInfo.publishedDate,
+    //       image: this.state.data.items[pageBookNum].volumeInfo.imageLinks
+    //         .smallThumbnail,
+    //       id: this.state.data.items[pageBookNum].id,
+    //       learnLink: `https://books.google.com/books?id=${this.state.data.items[pageBookNum].id}`,
+    //       rating: savedRating,
+    //       review: savedReview,
+    //     });
+    //   }, () => {
+    //     localStorage.setItem("books", JSON.stringify(this.state.savedBooks));
+    //   }
+    // );
+    // this.isOpen = false;
   }
 
-  render() {
     return (
       <div>
         <div className="form form-group">
@@ -166,23 +319,23 @@ class Search extends Component {
                   id="query"
                   placeholder="Search for..."
                   aria-label="Book search field"
-                  value={this.state.searchInput || ""}
-                  onChange={this.handleSearchInput}
+                  value={searchInput || ""}
+                  onChange={handleSearchInput}
                 ></input>
                 <div className="input-group-append">
                   <button
                     className="btn btn-outline-secondary"
                     type="button"
                     id="search-book"
-                    onClick={this.searchBookFunc}
+                    onClick={searchBookFunc}
                   >
-                    Book {this?.state?.savedBooks?.length}
+                    Book {savedBooks?.length}
                   </button>
                   <button
                     className="btn btn-outline-secondary"
                     type="button"
                     id="search-author"
-                    onClick={this.searchAuthorFunc}
+                    onClick={searchAuthorFunc}
                   >
                     Author
                   </button>
@@ -193,20 +346,20 @@ class Search extends Component {
         </div>
 
         <div className="row justify-content-center mb-3" id="item-count">
-          {this.state.loaded ? (
+          {loaded ? (
             <span>
-              Viewing {this.state.startIndex + 1} - {this.state.startIndex + 11}{" "}
-              of {this.state.totalItems} items.
+              Viewing {startIndex + 1} - {startIndex + 11}{" "}
+              of {totalItems} items.
             </span>
           ) : (
-            this.state.searchStatus
+            searchStatus
           )}
         </div>
 
         <div className="row">
           <div className="row found-items">
-            {this.state.loaded ? (
-              this.state.data.items.map((book, index) => (
+            {loaded ? (
+              data.items.map((book, index) => (
                 <div
                   className="col col-12 col-md-6 py-2"
                   id={book.id}
@@ -215,7 +368,7 @@ class Search extends Component {
                   <FoundItems
                     book={book.volumeInfo}
                     val={index}
-                    saveMeth={this.saveMethod}
+                    saveMeth={saveMethod}
                   />
                 </div>
               ))
@@ -227,14 +380,14 @@ class Search extends Component {
           </div>
         </div>
 
-        {this.state.loaded && (
+        {loaded && (
           <div className="row justify-content-center my-3" id="pageButtons">
             <button
               className="btn btn-outline-secondary mx-1"
               type="button"
               id="previous"
               href="#top"
-              onClick={this.navPrev}
+              onClick={navPrev}
             >
               Previous
             </button>
@@ -243,7 +396,7 @@ class Search extends Component {
               type="button"
               id="next"
               href="#top"
-              onClick={this.navForward}
+              onClick={navForward}
             >
               Next
             </button>
@@ -251,7 +404,6 @@ class Search extends Component {
         )}
       </div>
     );
-  }
 };
 
 export default Search;

@@ -171,7 +171,7 @@ let handleSignOut = () => {
       //setLogInStatus(false);
       //console.log("Log in status: " + logInStatus);
       console.log("Not logged in")
-      setAccStatus("Logged out");
+      //setAccStatus("Logged out");
 
 
       // User is signed out.
