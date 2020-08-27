@@ -1,16 +1,23 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import firebase, { firestore } from 'firebase';
 import Firebase from './Firebase';
 import AccModal from "./AccModal";
 import Modal from "react-bootstrap/Modal";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+import {AccContext} from "./AccContext";
 
 const Topbar = (props) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [logInStatus, setLogInStatus] = React.useState(
+    firebase.auth().currentUser
+  );
   const [currentUser, setCurrentUser] = React.useState(
     firebase.auth().currentUser?.email
   );
+
+  const {accStatus, setAccStatus} = useContext(AccContext);
+  console.log(useContext(AccContext));
 
   const showModal = (e) => {
     e.preventDefault();
@@ -139,22 +146,34 @@ let handleSignOut = () => {
 
   firebase.auth().onAuthStateChanged(function (user) {
     console.log(user?.email);
+    //setCurrentUser(user?.email);
+
     if (user) {
       console.log("Successful log-in!")
       console.log(firebase.auth().currentUser);
       // setCurrentUser(user?.email);
+      console.log(currentUser);
+      setAccStatus(user?.email)
 
       // // User is signed in.
-      // let logInStatus = 1;
-      // console.log(logInStatus, user.email)
+      //setLogInStatus(true);
+      //console.log("Log in status: " + logInStatus)
       // let uName = await user.displayName;
       // ...
     } else {
 
       // $("#acc-status").text(`You're not logged in`);
-      console.log("Not logged in");
-      setCurrentUser("Not logged in")
-      let logInStatus = 0;
+      //console.log("Not logged in");
+      // setCurrentUser(null)
+      setAccStatus(null)
+      console.log(currentUser);
+
+      //setLogInStatus(false);
+      //console.log("Log in status: " + logInStatus);
+      console.log("Not logged in")
+      setAccStatus("Logged out");
+
+
       // User is signed out.
       // ...
     }
@@ -164,32 +183,43 @@ window.onload = function () {
   //authCheck();
 };
 
+
     return (
       <div className="row bg-light account d-flex flex-row justify-content-center">
         <div className="acc-buttons">
+          {/* <span>{this.context}</span> */}
           {/* <!-- Button trigger modal --> */}
-          <a
-            href="#"
-            id="my-acc"
-            data-toggle="modal"
-            data-target="#accountModal"
-            onClick={showModal}
-            className="mx-1"
-          >
-            My Account
-          </a>
-          <a
-            href="#"
-            id="my-acc"
-            data-toggle="modal"
-            data-target="#accountModal"
-            onClick={handleSignOut}
-            className="mx-1"
-          >
-            Sign out
-          </a>
+          {!accStatus && (
+            <a
+              href="#"
+              id="my-acc"
+              data-toggle="modal"
+              data-target="#accountModal"
+              onClick={showModal}
+              className="mx-1"
+            >
+              My Account
+            </a>
+          )}
+
           <span id="acc-status" className="mx-1">
-            {firebase.auth().currentUser ? `Logged in as ${currentUser}` : "Not logged in"}
+            {accStatus ? (
+              <React.Fragment>
+                Logged in as {accStatus}
+                <a
+                  href="#"
+                  id="my-acc"
+                  data-toggle="modal"
+                  data-target="#accountModal"
+                  onClick={handleSignOut}
+                  className="mx-1"
+                >
+                  (sign out)
+                </a>
+              </React.Fragment>
+            ) : (
+              "Not logged in"
+            )}
           </span>
         </div>
 

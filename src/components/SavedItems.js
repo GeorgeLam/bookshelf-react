@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AccContext } from "./AccContext";
 import Modal from "react-bootstrap/Modal";
 import SaveModal from "./SaveModal"
 
@@ -8,6 +9,8 @@ const SavedItems = (props) => {
   const [rating, handleRatingUpdate] = React.useState(1);
   const [review, handleReviewUpdate] = React.useState("");
   const [ratingConvert, handleRatingConv] = React.useState("");
+
+  const {accStatus, setAccStatus} = useContext(AccContext);
 
   const showModal = (e) => {
     e.preventDefault();
@@ -32,7 +35,8 @@ const SavedItems = (props) => {
           <p className="rating" id="rating${counter}">{props?.book?.rating}</p>
           <p className="review" id="review${counter}"><strong>Your review:</strong><br />{props?.book?.review}</p>
           <a href="#" className="btn btn-sm btn-primary edit-book" id={props?.book?.id} data-toggle="modal" data-target="#ratingModal" onClick={showModal}>Edit</a>
-          <a href="#" className="btn btn-sm btn-primary unsave-book ml-1" id={props?.book?.id} onClick={props.removeMeth}>Remove</a>
+  <a href="#" className="btn btn-sm btn-primary unsave-book ml-1" id={props?.book?.id} onClick={props.removeMeth}>Remove{accStatus
+}</a>
           {/* <SaveModal status={isOpen} /> */}
         </div>
         {

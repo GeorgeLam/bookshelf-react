@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Modal from "react-bootstrap/Modal";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+import { AccContext } from "./AccContext";
 
 const AccModal = (props) => {
   const [isOpen, setIsOpen] = React.useState(false);
-
-
 
   return (
     <div>
@@ -51,7 +50,7 @@ const AccModal = (props) => {
                     </button>
                   </form>
                 </div>
-             </div>
+              </div>
             </Modal.Body>
           </Tab>
           <Tab eventKey="signup" title="Sign Up">

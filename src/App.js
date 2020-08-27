@@ -11,27 +11,29 @@ import Search from "./components/Search";
 import FoundItems from "./components/FoundItems";
 import Pagebuttons from './components/Pagebuttons'
 import { BrowserRouter as Router, Route } from "react-router-dom";
+import { AccContext } from "./components/AccContext";
 
 
 function App() {
 
-  let [logInStatus, setLogInStatus] = useState(false);
+  //let [logInStatus, setLogInStatus] = useState(false);
 
-  let signInMeth = () => {
-    setLogInStatus(true);
-    console.log(logInStatus)
-  }
+  // let signInMeth = () => {
+  //   setLogInStatus(true);
+  //   console.log(logInStatus)
+  // }
+
+  const [accStatus, setAccStatus] = useState("Default!")
 
   return (
     <Router>
       <div id="top">
-        <Topbar signInMeth={signInMeth} />
+        <AccContext.Provider value={{accStatus, setAccStatus}}>
+          <Topbar />
 
-       
-
-        <Route path="/" exact component={Home} />
-        <Route path="/saved" component={Saved}/>
-
+          <Route path="/" exact component={Home} />
+          <Route path="/saved" component={Saved} />
+        </AccContext.Provider>
 
         {/* <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS --> */}
@@ -49,18 +51,16 @@ function App() {
         <script src="./lodash-min.js"></script>
         {/* <!-- <script src="env.js"></script> --> */}
 
-
-
         {/* <!-- The core Firebase JS SDK is always required and must be listed first --> */}
-    {/* <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script> */}
+        {/* <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script> */}
 
         {/* <!-- TODO: Add SDKs for Firebase products that you want to use
          https://firebase.google.com/docs/web/setup#available-libraries --> */}
-    {/* <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js"></script>
+        {/* <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js"></script> */}
 
-       {/* <script src="./firebase.js"></script> */}
+        {/* <script src="./firebase.js"></script> */}
 
         {/* <!-- The core Firebase JS SDK is always required and must be listed first --> */}
         {/* <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script> */}
