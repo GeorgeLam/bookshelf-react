@@ -9,7 +9,7 @@ let booksShown = 0;
 
 const Search = () => {
     const { accStatus, setAccStatus } = useContext(AccContext);
-
+    // console.log(accStatus);
     let [type, setType] = useState("");
     let [index, setIndex] = useState(0);
     let [data, setData] = useState("");
@@ -196,7 +196,7 @@ const Search = () => {
                     id="search-author"
                     onClick={searchAuthorFunc}
                   >
-                    Author
+                    Author {accStatus}
                   </button>
                 </div>
               </div>

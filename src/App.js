@@ -23,7 +23,7 @@ function App() {
   //   console.log(logInStatus)
   // }
 
-  const [accStatus, setAccStatus] = useState("Default!")
+  const [accStatus, setAccStatus] = useState()
 
   return (
     <Router>
