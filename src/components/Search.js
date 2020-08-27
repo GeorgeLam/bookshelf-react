@@ -57,6 +57,8 @@ const Search = () => {
     setSearchQuery(searchInput);
     setType("book");
     setIndex(0)
+    setStartIndex(0);
+
     //searcher();
 
     // this.setState(
@@ -71,8 +73,17 @@ const Search = () => {
   }
 
     useEffect(() => {
-      if(type){
-        setUrl(`https://www.googleapis.com/books/v1/volumes?q=${searchInput}&startIndex=${startIndex}`)}}, [type, index, searchQuery, startIndex])
+      if(type == "book"){
+        setUrl(`https://www.googleapis.com/books/v1/volumes?q=${searchInput}&startIndex=${startIndex}`)
+        }
+      else if (type == "author") {
+        setUrl(`https://www.googleapis.com/books/v1/volumes?q=+inauthor:${searchQuery}&startIndex=${startIndex}`)
+        }
+      }, [type, index, searchQuery]
+    )
+
+
+
 
     useEffect(() => {
       console.log(url);
@@ -89,7 +100,9 @@ const Search = () => {
     setSearchQuery(searchInput);
     setType("author");
     setIndex(0);
-    searcher();
+    setStartIndex(0);
+
+    //searcher();
 
 
     // this.setState(
@@ -128,7 +141,8 @@ const Search = () => {
         console.log("type is book", searchQuery, startIndex)
         // setUrl(`https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&startIndex=${startIndex}`);
       } else if (type == "author") {
-        setUrl(`https://www.googleapis.com/books/v1/volumes?q=+inauthor:${searchQuery}&startIndex=${startIndex}`);
+        console.log("author")
+        // setUrl(`https://www.googleapis.com/books/v1/volumes?q=+inauthor:${searchQuery}&startIndex=${startIndex}`);
       }
 
       console.log(url)
@@ -138,7 +152,6 @@ const Search = () => {
       console.log(data);
       setData(await response.json());
       setLoaded(true);
-      setTotalItems(data.totalItems)
 
       // this.setState({
       //   data: data,
@@ -194,8 +207,9 @@ const Search = () => {
   // }
 
   useEffect(() => {
-    console.log("Check")
     if (data) {
+      setTotalItems(data.totalItems)
+
       setTidied(data.items.map((book) => {
         console.log(book);
         if (book?.volumeInfo?.authors?.length > 1) {
@@ -380,8 +394,8 @@ const Search = () => {
           </div>
         </div>
 
-        {loaded && (
           <div className="row justify-content-center my-3" id="pageButtons">
+          {(loaded && startIndex != 0) && (
             <button
               className="btn btn-outline-secondary mx-1"
               type="button"
@@ -391,6 +405,9 @@ const Search = () => {
             >
               Previous
             </button>
+          )}
+
+          {loaded && (
             <button
               className="btn btn-outline-secondary mx-1"
               type="button"
@@ -400,8 +417,8 @@ const Search = () => {
             >
               Next
             </button>
+          )}
           </div>
-        )}
       </div>
     );
 };
