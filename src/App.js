@@ -12,6 +12,7 @@ import FoundItems from "./components/FoundItems";
 import Pagebuttons from './components/Pagebuttons'
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { AccContext } from "./components/AccContext";
+import { BooksContext } from "./components/BooksContext";
 
 
 function App() {
@@ -23,15 +24,18 @@ function App() {
   // }
 
   const [accStatus, setAccStatus] = useState();
+  const [storedBooks, setStoredBooks] = useState();
 
   return (
     <Router>
       <div id="top">
         <AccContext.Provider value={{ accStatus, setAccStatus }}>
+          <BooksContext.Provider value={{ storedBooks, setStoredBooks }}>
           <Topbar />
 
           <Route path="/" exact component={Home} />
           <Route path="/saved" component={Saved} />
+          </BooksContext.Provider>
         </AccContext.Provider>
 
         {/* <!-- Optional JavaScript -->

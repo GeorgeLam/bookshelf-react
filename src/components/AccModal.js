@@ -6,6 +6,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { AccContext } from "./AccContext";
 
+
 const AccModal = (props) => {
   // let [openStatus, setOpenStatus] = React.useState(); 
   console.log("Modal acc opened");
@@ -166,7 +167,7 @@ const AccModal = (props) => {
       //     {
       //       email: user?.email,
       //       username: user?.displayName,
-      //       books: [],
+      //       books: localStorage.getItem('books2'),
       //     }
       //   );
 
