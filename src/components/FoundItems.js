@@ -1,12 +1,14 @@
 import React, { useState, useContext } from "react";
 import {AccContext} from './AccContext';
 import Modal from "react-bootstrap/Modal";
+import AccModal from "./AccModal"
 import SaveModal from "./SaveModal"
 
 const FoundItems = (props) => {
   const {accStatus, setAccStatus} = useContext(AccContext);
 
   const [isOpen, setIsOpen] = React.useState(false);
+  const [accModalIsOpen, setAccModalIsOpen] = React.useState(false);
   const [savingNum, setSavingNum] = React.useState("");
   const [rating, handleRating] = React.useState("You have not rated this book.");
   const [review, handleReview] = React.useState("");
@@ -14,7 +16,8 @@ const FoundItems = (props) => {
   const showSaveModal = (e) => {
     e.preventDefault();
     if(!accStatus) {
-      alert("You're not logged in!")
+      setAccModalIsOpen(true);
+      //alert("You're not logged in!")
       return
     }
     //console.log(e.target.id);
@@ -85,15 +88,16 @@ const FoundItems = (props) => {
         }}
       />
 
-      {/* <AccModal
-        isOpen={isOpen}
+      <AccModal
+        isOpen={accModalIsOpen}
+        setIsOpen={setAccModalIsOpen}
         closeModal={() => {
           setIsOpen(false);
         }}
-        signIn={handleSignIn}
-        signUp={handleSignUp}
-        signOut={handleSignOut}
-      /> */}
+        // signIn={handleSignIn}
+        // signUp={handleSignUp}
+        // signOut={handleSignOut}
+      />
     </div>
   );
 };
