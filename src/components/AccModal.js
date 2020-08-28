@@ -73,6 +73,7 @@ const AccModal = (props) => {
           .set({
             username: newUser.displayName,
             email: newUser.email,
+            books: []
           })
           .catch(function (error) {
             console.error("Error adding document: ", error);
@@ -127,6 +128,7 @@ const AccModal = (props) => {
       .signOut()
       .then(function () {
         console.log("Signed Out"); // Sign-out successful.
+        // localStorage.setItem('fromDB', []);
         // $("#my-acc").text("Log In");
         // $("#my-acc").attr("data-target", "#accountModal");
         //setCurrentUser("No current user");
@@ -142,9 +144,10 @@ const AccModal = (props) => {
       });
   };
 
-  firebase.auth().onAuthStateChanged(function (user) {
+  firebase.auth().onAuthStateChanged(async function (user) {
     console.log("auth state changed")
     console.log(user?.email);
+    console.log(user?.displayName);
     //setCurrentUser(user?.email);
 
     if (user) {
@@ -152,18 +155,67 @@ const AccModal = (props) => {
       console.log(firebase.auth().currentUser);
       // setCurrentUser(user?.email);
       console.log(currentUser);
-      setAccStatus(user?.email);
+      console.log(user);
+      setAccStatus(user?.displayName);
+    
+      // let createBookRec = await firebase
+      //   .firestore()
+      //   .collection("users")
+      //   .doc(user?.displayName)
+      //   .set(
+      //     {
+      //       email: user?.email,
+      //       username: user?.displayName,
+      //       books: [],
+      //     }
+      //   );
+
+      
+
+      // let docQuery = 
+      let dbQuery = await firebase.firestore().collection("users").doc(user?.displayName).get().then((doc) => {
+        if (doc.exists) {
+            console.log("Document data:", doc.data());
+            let retrievedBooks = JSON.parse(doc?.data()?.books);
+            console.log(retrievedBooks);
+            localStorage.setItem("fromDB", JSON.stringify(retrievedBooks));
+        }
+      })
+
+    
+    }
+
+      
+      
+    
+      
+      
+    // db.collection("users")
+    //   .doc(`${user.displayName}`)
+    //   .set({
+    //     books: JSON.stringify(savedBooks),
+    //   })
+    //   .then(function () {
+    //     console.log("Document successfully written!");
+    //   })
+    //   .catch(function (error) {
+    //     console.error("Error writing document: ", error);
+    //   });
+  
+
 
       // // User is signed in.
       //setLogInStatus(true);
       //console.log("Log in status: " + logInStatus)
       // let uName = await user.displayName;
       // ...
-    } else {
+    else {
       // $("#acc-status").text(`You're not logged in`);
       //console.log("Not logged in");
       // setCurrentUser(null)
       setAccStatus(null);
+      localStorage.setItem("fromDB", null);
+
       console.log(currentUser);
 
       //setLogInStatus(false);
@@ -174,7 +226,9 @@ const AccModal = (props) => {
       // User is signed out.
       // ...
     }
-  });
+  }
+  )
+
 
   return (
     <div>

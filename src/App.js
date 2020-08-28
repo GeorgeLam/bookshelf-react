@@ -15,7 +15,6 @@ import { AccContext } from "./components/AccContext";
 
 
 function App() {
-
   //let [logInStatus, setLogInStatus] = useState(false);
 
   // let signInMeth = () => {
@@ -23,12 +22,12 @@ function App() {
   //   console.log(logInStatus)
   // }
 
-  const [accStatus, setAccStatus] = useState()
+  const [accStatus, setAccStatus] = useState();
 
   return (
     <Router>
       <div id="top">
-        <AccContext.Provider value={{accStatus, setAccStatus}}>
+        <AccContext.Provider value={{ accStatus, setAccStatus }}>
           <Topbar />
 
           <Route path="/" exact component={Home} />

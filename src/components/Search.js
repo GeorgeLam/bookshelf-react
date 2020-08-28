@@ -1,4 +1,6 @@
 import React, { Component, useState, useEffect, useContext } from "react";
+import firebase, { firestore } from "firebase";
+
 import FoundItems from "./FoundItems";
 import Pagebuttons from "./Pagebuttons";
 import {AccContext} from "./AccContext";
@@ -135,10 +137,30 @@ const Search = () => {
 
   let saveMethod = (pageBookNum, savedReview, savedRating) => {
     if(accStatus) console.log("yup you're logged in")
+
+
+
     console.log("Accessing save meth")
-    setSavedBooks(
-      savedBooks.push(
-        {
+    // setSavedBooks(
+    //   savedBooks.push(
+    //     {
+    //       title: data.items[pageBookNum].volumeInfo.title,
+    //       authors: data.items[pageBookNum].volumeInfo.authors,
+    //       date: data.items[pageBookNum].volumeInfo.publishedDate,
+    //       image: data.items[pageBookNum].volumeInfo.imageLinks
+    //         .smallThumbnail,
+    //       id: data.items[pageBookNum].id,
+    //       learnLink: `https://books.google.com/books?id=${data.items[pageBookNum].id}`,
+    //       rating: savedRating,
+    //       review: savedReview,
+    //     }
+    //   )
+    // )
+    // localStorage.setItem("books", JSON.stringify(savedBooks));
+
+    const updatingDBList = JSON.parse(localStorage.getItem('fromDB'));
+    updatingDBList.push(
+      {
           title: data.items[pageBookNum].volumeInfo.title,
           authors: data.items[pageBookNum].volumeInfo.authors,
           date: data.items[pageBookNum].volumeInfo.publishedDate,
@@ -149,11 +171,31 @@ const Search = () => {
           rating: savedRating,
           review: savedReview,
         }
-      )
     )
-
-    localStorage.setItem("books", JSON.stringify(savedBooks));
+    console.log(updatingDBList); 
     
+    
+
+    let writeToDB = () => {
+      firebase.firestore().collection("users")
+            .doc(`${accStatus}`)
+            .set({
+              books: JSON.stringify(updatingDBList),
+            })
+            .then(function () {
+              console.log("Document successfully written!");
+            })
+            .catch(function (error) {
+              console.error("Error writing document: ", error);
+            });
+        }
+      
+
+    writeToDB();
+
+
+
+
   }
 
     return (
