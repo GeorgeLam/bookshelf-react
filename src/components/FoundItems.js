@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import {AccContext} from './AccContext';
 import Modal from "react-bootstrap/Modal";
-import AccModal from "./AccModal"
+import {MemoAccModal} from "./AccModal"
 import SaveModal from "./SaveModal"
 
 const FoundItems = (props) => {
@@ -74,8 +74,9 @@ const FoundItems = (props) => {
           />
         }
       </div>
-
+          
       <SaveModal
+        bookTitle={props?.book?.title}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         handleReview={handleReview}
@@ -88,12 +89,12 @@ const FoundItems = (props) => {
         }}
       />
 
-      <AccModal
+      <MemoAccModal
         isOpen={accModalIsOpen}
         setIsOpen={setAccModalIsOpen}
-        closeModal={() => {
-          setIsOpen(false);
-        }}
+        // closeModal={() => {
+        //   setAccModalIsOpen(false);
+        // }}
         // signIn={handleSignIn}
         // signUp={handleSignUp}
         // signOut={handleSignOut}

@@ -27,49 +27,38 @@ const Search = () => {
     let [savedBooks, setSavedBooks] = useState(JSON.parse(localStorage.getItem('books')) || []);
 
   let searchBookFunc = () => {
-    console.log(searchInput);
+    if(!searchInput) return;
     setSearchQuery(searchInput);
     setType("book");
     setIndex(0)
     setStartIndex(0);
-
-  }
-
-    useEffect(() => {
-      if(type == "book"){
-        setUrl(`https://www.googleapis.com/books/v1/volumes?q=${searchInput}&startIndex=${startIndex}`)
-        }
-      else if (type == "author") {
-        setUrl(`https://www.googleapis.com/books/v1/volumes?q=+inauthor:${searchQuery}&startIndex=${startIndex}`)
-        }
-      }, [type, index, searchQuery]
-    )
-
-
-
-
-    useEffect(() => {
-      console.log(url);
-
-      if(url) searcher();
-
-    }, [url]);
-
-
+  };
+  
   let searchAuthorFunc = () => {
-    // console.log(this.state.searchInput);
-    console.log(searchInput)
+    if (!searchInput) return;
     setSearchQuery(searchInput);
     setType("author");
     setIndex(0);
     setStartIndex(0);
+  };
 
-  }
+  useEffect(() => {
+    if(type == "book"){
+      setUrl(`https://www.googleapis.com/books/v1/volumes?q=${searchInput}&startIndex=${startIndex}`)
+      }
+    else if (type == "author") {
+      setUrl(`https://www.googleapis.com/books/v1/volumes?q=+inauthor:${searchQuery}&startIndex=${startIndex}`)
+      }
+    }, [type, index, searchQuery]
+  )
+
+  useEffect(() => {
+    if(url) searcher();
+  }, [url]);
 
   let handleSearchInput = (e) => {
     e.preventDefault();
     setSearchInput(e.target.value);
-
   }
 
   let searcher = async () => {
@@ -180,7 +169,8 @@ const Search = () => {
                   placeholder="Search for..."
                   aria-label="Book search field"
                   value={searchInput || ""}
-                  onChange={handleSearchInput}
+                  onChange={(e) => {setSearchInput(e.target.value)}}
+                  //handleSearchInput}
                 ></input>
                 <div className="input-group-append">
                   <button

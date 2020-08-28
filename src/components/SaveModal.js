@@ -3,14 +3,14 @@ import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 
-const SaveModal = ({props, savingNum, handleRating, handleReview, review, rating, setIsOpen, isOpen, saveMeth}) => {
+const SaveModal = ({savingNum, handleRating, handleReview, review, rating, setIsOpen, isOpen, saveMeth, bookTitle}) => {
 let [status, changeStatus] = useState(isOpen)
 
   return (
     <Modal show={isOpen}>
       <Modal.Header>
         <span>
-          Saving <strong>{props?.book?.title}</strong>
+          Saving <strong>{bookTitle}</strong>
         </span>
       </Modal.Header>
       <Modal.Body>

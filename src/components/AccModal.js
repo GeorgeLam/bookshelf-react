@@ -7,7 +7,6 @@ import Tabs from "react-bootstrap/Tabs";
 import { AccContext } from "./AccContext";
 
 const AccModal = (props) => {
-  let closeThis;
   // let [openStatus, setOpenStatus] = React.useState(); 
   console.log("Modal acc opened");
   const [isOpen, setIsOpen] = React.useState(props.isOpen);
@@ -297,4 +296,4 @@ const AccModal = (props) => {
   );
 };
 
-export default AccModal;
+export const MemoAccModal = React.memo(AccModal);

@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import firebase, { firestore } from 'firebase';
 import Firebase from './Firebase';
-import AccModal from "./AccModal";
+import {MemoAccModal} from "./AccModal";
 import Modal from "react-bootstrap/Modal";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
@@ -223,7 +223,7 @@ window.onload = function () {
           </span>
         </div>
 
-        <AccModal
+        <MemoAccModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           closeModal={() => {
