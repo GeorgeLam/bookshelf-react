@@ -35,8 +35,7 @@ const SavedItems = (props) => {
           <p className="rating" id="rating${counter}">{props?.book?.rating}</p>
           <p className="review" id="review${counter}"><strong>Your review:</strong><br />{props?.book?.review}</p>
           <a href="#" className="btn btn-sm btn-primary edit-book" id={props?.book?.id} data-toggle="modal" data-target="#ratingModal" onClick={showModal}>Edit</a>
-  <a href="#" className="btn btn-sm btn-primary unsave-book ml-1" id={props?.book?.id} onClick={props.removeMeth}>Remove{accStatus
-}</a>
+  <a href="#" className="btn btn-sm btn-primary unsave-book ml-1" id={props?.book?.id} onClick={props.removeMeth}>Remove</a>
           {/* <SaveModal status={isOpen} /> */}
         </div>
         {

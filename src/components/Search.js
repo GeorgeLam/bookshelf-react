@@ -146,6 +146,7 @@ const Search = () => {
 
   let saveMethod = (pageBookNum, savedReview, savedRating) => {
     if(accStatus) console.log("yup you're logged in")
+    console.log("Accessing save meth")
     setSavedBooks(
       savedBooks.push(
         {
@@ -188,7 +189,7 @@ const Search = () => {
                     id="search-book"
                     onClick={searchBookFunc}
                   >
-                    Book {savedBooks?.length}
+                    Book
                   </button>
                   <button
                     className="btn btn-outline-secondary"
@@ -196,7 +197,7 @@ const Search = () => {
                     id="search-author"
                     onClick={searchAuthorFunc}
                   >
-                    Author {accStatus}
+                    Author
                   </button>
                 </div>
               </div>
