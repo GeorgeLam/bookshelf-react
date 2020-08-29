@@ -69,9 +69,6 @@ let Saved = () => {
     setChangedTheAlter(true);
   };
 
-  
-
-
   let removeItem = (e) => {
     e.preventDefault();
     console.log("removing item", e.target.id);
@@ -80,7 +77,9 @@ let Saved = () => {
     setChangedTheAlter(true);
   };
 
- 
+  let copyToClipboard = () => {
+      console.log("Copying")
+  }
 
     useEffect(() => {
         console.log("final loop hit")
@@ -119,11 +118,32 @@ let Saved = () => {
                             this.state.searchStatus
                         )}
                 </div> */}
-
-      <div className="">
+      <div>
+        {currentAcc && (
+          <div className="col col-8 text-center mx-auto mb-2">
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                value={"http://127.0.0.1:3000/saved/" + currentAcc?.accStatus}
+              ></input>
+              <div className="input-group-append">
+                <button
+                  className="btn btn-outline-secondary"
+                  type="button"
+                    onClick={copyToClipboard}
+                >
+                  Copy
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="row found-items">
           <AccContext.Consumer>
-            {(value) => {setCurrentAcc(value)}}
+            {(value) => {
+              setCurrentAcc(value);
+            }}
           </AccContext.Consumer>
           {/* <p>{this.state.savedBooks.length}</p> */}
 

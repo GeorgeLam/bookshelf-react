@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import Home from './Home';
 import Saved from './Saved';
+import PersonSaved from './PersonSaved';
 
 import userProvider from "./components/userProvider";
 import Topbar from './components/Topbar'
@@ -31,10 +32,11 @@ function App() {
       <div id="top">
         <AccContext.Provider value={{ accStatus, setAccStatus }}>
           <BooksContext.Provider value={{ storedBooks, setStoredBooks }}>
-          <Topbar />
+            <Topbar />
 
-          <Route path="/" exact component={Home} />
-          <Route path="/saved" component={Saved} />
+            <Route path="/" exact component={Home} />
+            <Route path="/saved" exact component={Saved} />
+            <Route path="/saved/:personId" component={PersonSaved} />
           </BooksContext.Provider>
         </AccContext.Provider>
 
