@@ -23,11 +23,9 @@ let Saved = () => {
   const { accStatus, setAccStatus } = useContext(AccContext);
 
 
-  const [savedBooks, setSavedBooks] = React.useState(
-    JSON.parse(localStorage.getItem("fromDB")) || []
-  );
+  const [savedBooks, setSavedBooks] = React.useState();
   const [alterBooks, setAlteredBookList] = React.useState();
-  const [loaded, setLoaded] = React.useState(true);
+  const [loaded, setLoaded] = React.useState(false);
   const [updateType, setUpdateType] = React.useState();
 
   const [rati, setRating] = React.useState();
@@ -54,6 +52,23 @@ let Saved = () => {
 
   //getStoredBooks();
 
+
+    let retrieveDB = async () => {
+        console.log("retrieval")
+        let dbQuery = await firebase.firestore().collection("users").doc('gaogaoliangliang').get().then((doc) => {
+            if (doc.exists) {
+                console.log("Document data:", doc.data());
+                setSavedBooks(JSON.parse(doc?.data()?.books));
+                // setLoaded(true)
+                //console.log(retrievedBooks);
+                //localStorage.setItem("fromDB", JSON.stringify(retrievedBooks));
+            }
+        })
+    }
+
+    useEffect((retrieveDB) , [])
+
+
   let updateMeth = (targetBook, rev, rating) => {
     console.log("Update meth");
     console.log(targetBook, rev, rating);
@@ -66,17 +81,19 @@ let Saved = () => {
     // savedBooks.forEach(editChg);
     setAlteredBookList(savedBooks);
     // setResetter(resetter++);
-    function editChg(book) {
-      if (book.id == targetBook) {
-        console.log("Found the book: " + targetBook);
-        console.log(book.review);
-        book.review = rev;
-        book.rating = `You rated this book ${rating}/5.`;
-        console.log(book);
-      }
-    }
 
-    setUpdateType('edit');
+
+    // function editChg(book) {
+    //   if (book.id == targetBook) {
+    //     console.log("Found the book: " + targetBook);
+    //     console.log(book.review);
+    //     book.review = rev;
+    //     book.rating = `You rated this book ${rating}/5.`;
+    //     console.log(book);
+    //   }
+    // }
+
+    // setUpdateType('edit');
     
     // console.log(altera);
     
@@ -106,6 +123,14 @@ let Saved = () => {
     //   }
     // console.log(alteringBooks);
   };
+
+  
+    useEffect(() => {
+        console.log("Alter books altered!")
+      console.log(alterBooks);
+    }, [alterBooks]);
+
+
   // );
 
   // setAlteredBookList(
@@ -195,7 +220,11 @@ let Saved = () => {
           .catch(function (error) {
             console.error("Error adding document: ", error);
           });
-    }}, [changedTheAlter]);
+    }
+    setAlteredBookList();
+    setChangedTheAlter();
+
+}, [changedTheAlter]);
 
 
   return (
