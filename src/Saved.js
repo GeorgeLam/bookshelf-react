@@ -25,7 +25,8 @@ let Saved = () => {
 
   const [savedBooks, setSavedBooks] = React.useState();
   const [alterBooks, setAlteredBookList] = React.useState();
-  const [loaded, setLoaded] = React.useState(false);
+  const [loaded, setLoaded] = React.useState();
+  const [loadMessage, setLoadMessage] = React.useState("Loading books...");
   const [updateType, setUpdateType] = React.useState();
 
   const [rati, setRating] = React.useState();
@@ -69,8 +70,15 @@ let Saved = () => {
                 .then((doc) => {
                 if (doc.exists) {
                     console.log("Document data:", doc.data());
+                    console.log(JSON.parse(doc?.data().books).length);
+                    if (JSON.parse(doc?.data().books).length < 1){
+                        setLoadMessage(`You haven't saved any books!`);
+                    }
+                    else{
+                        setLoadMessage()
+                    }
                     setSavedBooks(JSON.parse(doc?.data()?.books));
-                    // setLoaded(true)
+                    setLoaded(true);
                     //console.log(retrievedBooks);
                     //localStorage.setItem("fromDB", JSON.stringify(retrievedBooks));
                     }
@@ -90,7 +98,7 @@ let Saved = () => {
             console.log("Found the book: " + targetBook);
             //console.log(book.review);
             book.review = rev;
-            book.rating = `You rated this book ${rating}/5.`;
+            book.rating = rating;
             console.log(book);
         }
     }
@@ -273,7 +281,7 @@ let Saved = () => {
         <div className="row found-items">
           {/* <p>{this.state.savedBooks.length}</p> */}
 
-          {savedBooks ? (
+          {(!loadMessage) ? (
             savedBooks?.map((book, index) => (
               <div
                 className="col col-12 col-md-6 py-2"
@@ -290,7 +298,7 @@ let Saved = () => {
             ))
           ) : (
             <div className="col text-center">
-              <h5>You haven't saved any books yet!</h5>
+              <h5>{loadMessage}</h5>
             </div>
           )}
         </div>

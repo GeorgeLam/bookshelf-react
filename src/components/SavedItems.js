@@ -32,24 +32,46 @@ const SavedItems = (props) => {
           <h5 className="card-title">{props?.book?.title}</h5>
           <p className="card-text">{props?.book?.authors}</p>
           <p className="card-text">{props?.book?.description}</p>
-          <p className="rating" id="rating${counter}">{props?.book?.rating}</p>
-          <p className="review" id="review${counter}"><strong>Your review:</strong><br />{props?.book?.review}</p>
-          <a href="#" className="btn btn-sm btn-primary edit-book" id={props?.book?.id} data-toggle="modal" data-target="#ratingModal" onClick={showModal}>Edit</a>
-  <a href="#" className="btn btn-sm btn-primary unsave-book ml-1" id={props?.book?.id} onClick={props.removeMeth}>Remove</a>
+          <p className="rating" id="rating${counter}">
+            {props?.book?.rating
+              ? (`You rated this book ${props?.book?.rating}/5.`)
+              : "You haven't rated this book"}
+          </p>
+          <p className="review" id="review${counter}">
+            <strong>Your review:</strong>
+            <br />{" "}
+            {props?.book?.review
+              ? props?.book?.review
+              : "You haven't reviewed this book"}
+          </p>
+          <a
+            href="#"
+            className="btn btn-sm btn-primary edit-book"
+            id={props?.book?.id}
+            data-toggle="modal"
+            data-target="#ratingModal"
+            onClick={showModal}
+          >
+            Edit
+          </a>
+          <a
+            href="#"
+            className="btn btn-sm btn-primary unsave-book ml-1"
+            id={props?.book?.id}
+            onClick={props.removeMeth}
+          >
+            Remove
+          </a>
           {/* <SaveModal status={isOpen} /> */}
         </div>
-        {
-          <img
-            className="col-4"
-            src={props?.book?.image}
-            alt="sans"
-          />
-        }
+        {<img className="col-4" src={props?.book?.image} alt="sans" />}
       </div>
 
       <Modal show={isOpen}>
-      <Modal.Header>
-        <span>Editing <strong>{props?.book?.title}</strong></span>
+        <Modal.Header>
+          <span>
+            Editing <strong>{props?.book?.title}</strong>
+          </span>
         </Modal.Header>
         <Modal.Body>
           <div className="form-group">
@@ -60,12 +82,18 @@ const SavedItems = (props) => {
               id="bookReview"
               aria-describedby="book-review"
               value={review}
-              onChange={e => handleReviewUpdate(e.target.value)}
+              onChange={(e) => handleReviewUpdate(e.target.value)}
             ></textarea>
           </div>
           <div className="form-group">
             <label htmlFor="rating">Rating: </label>
-            <select name="rating" id="bookRating" value={rating} onChange={e => handleRatingUpdate(e.target.value)}>
+            <select
+              name="rating"
+              id="bookRating"
+              value={rating}
+              onChange={(e) => handleRatingUpdate(e.target.value)}
+            >
+              <option value=""></option>
               <option value="1">1/5</option>
               <option value="2">2/5</option>
               <option value="3">3/5</option>
@@ -80,9 +108,8 @@ const SavedItems = (props) => {
             className="btn btn-primary saveRating"
             onClick={() => {
               props.updateMeth(savingNum, review, rating);
-              setIsOpen(false)
-            }
-          }
+              setIsOpen(false);
+            }}
           >
             Save changes
           </button>

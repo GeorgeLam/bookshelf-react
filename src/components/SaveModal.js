@@ -31,10 +31,13 @@ let [status, changeStatus] = useState(isOpen)
             name="rating"
             id="bookRating"
             value={rating}
-            onChange={(e) =>
-              handleRating(`You rated this book ${e.target.value}/5.`)
+            onChange={(e) =>{
+              console.log("Changed!", e.target.value);
+              handleRating(e.target.value)
+            }
             }
           >
+            <option value=""></option>
             <option value="1">1/5</option>
             <option value="2">2/5</option>
             <option value="3">3/5</option>
