@@ -53,20 +53,31 @@ let Saved = () => {
   //getStoredBooks();
 
 
-    let retrieveDB = async () => {
-        console.log("retrieval")
-        let dbQuery = await firebase.firestore().collection("users").doc('gaogaoliangliang').get().then((doc) => {
-            if (doc.exists) {
-                console.log("Document data:", doc.data());
-                setSavedBooks(JSON.parse(doc?.data()?.books));
-                // setLoaded(true)
-                //console.log(retrievedBooks);
-                //localStorage.setItem("fromDB", JSON.stringify(retrievedBooks));
-            }
-        })
-    }
+    
 
-    useEffect((retrieveDB) , [])
+    // useEffect((retrieveDB) , [])
+
+    useEffect(() => {
+        console.log("retrieval", accStatus);
+
+        let retrieveDB = async () => {
+            let dbQuery = await firebase
+                .firestore()
+                .collection("users")
+                .doc("gaogaoliangliang")
+                .get()
+                .then((doc) => {
+                if (doc.exists) {
+                    console.log("Document data:", doc.data());
+                    setSavedBooks(JSON.parse(doc?.data()?.books));
+                    // setLoaded(true)
+                    //console.log(retrievedBooks);
+                    //localStorage.setItem("fromDB", JSON.stringify(retrievedBooks));
+                    }
+                });
+        };
+        retrieveDB();
+    }, [])
 
 
   let updateMeth = (targetBook, rev, rating) => {
@@ -74,12 +85,26 @@ let Saved = () => {
     console.log(targetBook, rev, rating);
     // console.log(accStatus);
 
-    setTargetBook(targetBook);
-    setReview(rev);
-    setRating(rating);
+    function editChg(book) {
+        if (book.id == targetBook) {
+            console.log("Found the book: " + targetBook);
+            //console.log(book.review);
+            book.review = rev;
+            book.rating = `You rated this book ${rating}/5.`;
+            console.log(book);
+        }
+    }
+
+    savedBooks.forEach(editChg);
+    setChangedTheAlter(true);
+
+
+    // setTargetBook(targetBook);
+    // setReview(rev);
+    // setRating(rating);
 
     // savedBooks.forEach(editChg);
-    setAlteredBookList(savedBooks);
+    // setAlteredBookList(savedBooks);
     // setResetter(resetter++);
 
 
@@ -125,10 +150,10 @@ let Saved = () => {
   };
 
   
-    useEffect(() => {
-        console.log("Alter books altered!")
-      console.log(alterBooks);
-    }, [alterBooks]);
+    // useEffect(() => {
+    //     console.log("Alter books altered!")
+    //   console.log(alterBooks);
+    // }, [alterBooks]);
 
 
   // );
@@ -160,8 +185,9 @@ let Saved = () => {
     e.preventDefault();
     console.log("removing item", e.target.id);
     // setAlteredBookList(savedBooks);
-    setAlteredBookList(savedBooks.filter((book) => book.id != e.target.id));
-    setUpdateType("remove");
+    setSavedBooks(savedBooks.filter((book) => book.id != e.target.id));
+    setChangedTheAlter(true);
+    // setUpdateType("remove");
     // alterBooks = alterBooks.filter(book => book.id != e.target.id)
 
     //setSavedBooks(alterBooks);
@@ -174,38 +200,40 @@ let Saved = () => {
   };
 
  
-  useEffect(() => {
-    console.log("Setting altered books")
-    function editChg(book) {
-        if (book.id == targ) {
-            console.log("Found the book: " + targ);
-            console.log(book.review);
-            book.review = revi;
-            book.rating = `You rated this book ${rati}/5.`;
-            console.log(book);
-        }
-    }
+//   useEffect(() => {
+//     console.log("Setting altered books")
+//     function editChg(book) {
+//         if (book.id == targ) {
+//             console.log("Found the book: " + targ);
+//             console.log(book.review);
+//             book.review = revi;
+//             book.rating = `You rated this book ${rati}/5.`;
+//             console.log(book);
+//         }
+//     }
 
-    if (alterBooks){
-        alterBooks.forEach(editChg);
-        console.log("Alter's FE just ran")
-        setSavedBooks(alterBooks)
-        setChangedTheAlter(true)
-    }
+//     if (alterBooks){
+//         alterBooks.forEach(editChg);
+//         console.log("Alter's FE just ran")
+//         setSavedBooks(alterBooks)
+//         setChangedTheAlter(true)
+//     }
 
-    console.log(alterBooks);
-    if (updateType == "remove") {
-      setSavedBooks(alterBooks);
-      setUpdateType();
-    }
-    if (updateType == "edit") {
-      console.log("you're wanting to edit");
-      console.log(alterBooks);
-      setUpdateType();
-    }
-  }, [alterBooks]);
+//     console.log(alterBooks);
+//     if (updateType == "remove") {
+//       setSavedBooks(alterBooks);
+//       setUpdateType();
+//     }
+//     if (updateType == "edit") {
+//       console.log("you're wanting to edit");
+//       console.log(alterBooks);
+//       setUpdateType();
+//     }
+//   }, [alterBooks]);
 
     useEffect(() => {
+        console.log("final loop hit")
+        console.log(savedBooks);
     // localStorage.setItem('books2', JSON.stringify(savedBooks));
     if(changedTheAlter) {
         console.log("HEYYYYYYYYYYYYYYYYYY");
@@ -213,7 +241,7 @@ let Saved = () => {
         firebase
           .firestore()
           .collection("users")
-          .doc(`${accStatus}`)
+          .doc(`gaogaoliangliang`)
           .set({
             books: JSON.stringify(savedBooks),
           })
@@ -221,7 +249,7 @@ let Saved = () => {
             console.error("Error adding document: ", error);
           });
     }
-    setAlteredBookList();
+    //setAlteredBookList();
     setChangedTheAlter();
 
 }, [changedTheAlter]);

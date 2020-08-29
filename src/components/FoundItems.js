@@ -15,6 +15,7 @@ const FoundItems = (props) => {
 
   const showSaveModal = (e) => {
     e.preventDefault();
+    console.log(accStatus);
     if(!accStatus) {
       setAccModalIsOpen(true);
       //alert("You're not logged in!")
