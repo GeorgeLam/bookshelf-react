@@ -6,66 +6,27 @@ import SavedItems from "./components/SavedItems";
 
 import { AccContext } from "./components/AccContext";
 
-
-
 let Saved = () => {
-  // constructor() {
-  //     super()
-
-  //     this.removeItem = this.removeItem.bind(this);
-  //     this.updateMeth = this.updateMeth.bind(this);
-
-  //     this.state = {
-  //         savedBooks: JSON.parse(localStorage.getItem('fromDB')) || [],
-  //         loaded: true,
-  //     }
-  // }
   const { accStatus, setAccStatus } = useContext(AccContext);
-
-
   const [savedBooks, setSavedBooks] = React.useState();
-  const [alterBooks, setAlteredBookList] = React.useState();
   const [loaded, setLoaded] = React.useState();
   const [loadMessage, setLoadMessage] = React.useState("Loading books...");
-  const [updateType, setUpdateType] = React.useState();
-
-  const [rati, setRating] = React.useState();
-  const [revi, setReview] = React.useState();
-  const [targ, setTargetBook] = React.useState();
+  const [updateType, setUpdateType] = React.useState();  
   const [changedTheAlter, setChangedTheAlter] = React.useState();
-  const [resetter, setResetter] = React.useState(0);
+  const [currentAcc, setCurrentAcc] = React.useState();
+  
 
-  // getStoredBooks = async () => {
-  //     let dbQuery = await firebase
-  //       .firestore()
-  //       .collection("users")
-  //       .doc(user?.displayName)
-  //       .get()
-  //       .then((doc) => {
-  //         if (doc.exists) {
-  //           console.log("Document data:", doc.data());
-  //           let retrievedBooks = JSON.parse(doc?.data()?.books);
-  //           console.log(retrievedBooks);
-  //           localStorage.setItem("fromDB", JSON.stringify(retrievedBooks));
-  //         }
-  //       });
-  // }
-
-  //getStoredBooks();
-
-
-    
-
-    // useEffect((retrieveDB) , [])
 
     useEffect(() => {
-        console.log("retrieval", accStatus);
+
+    if(currentAcc?.accStatus){    
+        console.log(currentAcc.accStatus);
 
         let retrieveDB = async () => {
             let dbQuery = await firebase
                 .firestore()
                 .collection("users")
-                .doc("gaogaoliangliang")
+                .doc(currentAcc.accStatus)
                 .get()
                 .then((doc) => {
                 if (doc.exists) {
@@ -85,7 +46,8 @@ let Saved = () => {
                 });
         };
         retrieveDB();
-    }, [])
+        }
+    }, [currentAcc])
 
 
   let updateMeth = (targetBook, rev, rating) => {
@@ -105,89 +67,10 @@ let Saved = () => {
 
     savedBooks.forEach(editChg);
     setChangedTheAlter(true);
-
-
-    // setTargetBook(targetBook);
-    // setReview(rev);
-    // setRating(rating);
-
-    // savedBooks.forEach(editChg);
-    // setAlteredBookList(savedBooks);
-    // setResetter(resetter++);
-
-
-    // function editChg(book) {
-    //   if (book.id == targetBook) {
-    //     console.log("Found the book: " + targetBook);
-    //     console.log(book.review);
-    //     book.review = rev;
-    //     book.rating = `You rated this book ${rating}/5.`;
-    //     console.log(book);
-    //   }
-    // }
-
-    // setUpdateType('edit');
-    
-    // console.log(altera);
-    
-
-
-    // setAlteredBookList(
-    //   setSavedBooks(savedBooks.forEach((book) => {
-    //     console.log(book);
-    //     if (book.id == targetBook) {
-    //       console.log("Found the book: " + targetBook);
-    //       console.log(book.review);
-    //       book.review = rev;
-    //       book.rating = `You rated this book ${rating}/5.`;
-    //       console.log(book);
-    //     }
-    //   }))
-    // );
-
-    // let alteringBooks = savedBooks.forEach((book) => {
-    //     console.log(book);
-    //   if (book.id == targetBook) {
-    //     console.log("Found the book: " + targetBook);
-    //     console.log(book.review);
-    //     book.review = rev;
-    //     book.rating = `You rated this book ${rating}/5.`;
-    //     console.log(book);
-    //   }
-    // console.log(alteringBooks);
   };
 
   
-    // useEffect(() => {
-    //     console.log("Alter books altered!")
-    //   console.log(alterBooks);
-    // }, [alterBooks]);
 
-
-  // );
-
-  // setAlteredBookList(
-  //     savedBooks.forEach(book => {
-  //         if (book.id == targetBook) {
-  //             console.log("Found the book: " + targetBook);
-  //             console.log(book.review);
-  //             book.review = rev;
-  //             book.rating = `You rated this book ${rating}/5.`;
-  //             console.log(book);
-  //         }
-  //     })
-  // )
-  // setUpdateType("edit");
-
-  //setSavedBooks(alterBooks);
-
-  // localStorage.setItem('books', JSON.stringify(alterBooks));
-
-  // this.setState({ savedBooks: alterBooks },
-  //     () => {
-  //         localStorage.setItem('books', JSON.stringify(this.state.savedBooks))
-  //     }
-  // )
 
   let removeItem = (e) => {
     e.preventDefault();
@@ -195,49 +78,9 @@ let Saved = () => {
     // setAlteredBookList(savedBooks);
     setSavedBooks(savedBooks.filter((book) => book.id != e.target.id));
     setChangedTheAlter(true);
-    // setUpdateType("remove");
-    // alterBooks = alterBooks.filter(book => book.id != e.target.id)
-
-    //setSavedBooks(alterBooks);
-
-    // this.setState({savedBooks: alterBooks},
-    //     () => {
-    //         localStorage.setItem('books', JSON.stringify(this.state.savedBooks))
-    //     }
-    // )
   };
 
  
-//   useEffect(() => {
-//     console.log("Setting altered books")
-//     function editChg(book) {
-//         if (book.id == targ) {
-//             console.log("Found the book: " + targ);
-//             console.log(book.review);
-//             book.review = revi;
-//             book.rating = `You rated this book ${rati}/5.`;
-//             console.log(book);
-//         }
-//     }
-
-//     if (alterBooks){
-//         alterBooks.forEach(editChg);
-//         console.log("Alter's FE just ran")
-//         setSavedBooks(alterBooks)
-//         setChangedTheAlter(true)
-//     }
-
-//     console.log(alterBooks);
-//     if (updateType == "remove") {
-//       setSavedBooks(alterBooks);
-//       setUpdateType();
-//     }
-//     if (updateType == "edit") {
-//       console.log("you're wanting to edit");
-//       console.log(alterBooks);
-//       setUpdateType();
-//     }
-//   }, [alterBooks]);
 
     useEffect(() => {
         console.log("final loop hit")
@@ -249,7 +92,7 @@ let Saved = () => {
         firebase
           .firestore()
           .collection("users")
-          .doc(`gaogaoliangliang`)
+          .doc(currentAcc.accStatus)
           .set({
             books: JSON.stringify(savedBooks),
           })
@@ -279,9 +122,12 @@ let Saved = () => {
 
       <div className="">
         <div className="row found-items">
+          <AccContext.Consumer>
+            {(value) => {setCurrentAcc(value)}}
+          </AccContext.Consumer>
           {/* <p>{this.state.savedBooks.length}</p> */}
 
-          {(!loadMessage) ? (
+          {!loadMessage ? (
             savedBooks?.map((book, index) => (
               <div
                 className="col col-12 col-md-6 py-2"

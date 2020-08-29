@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Home from './Home';
-import Saved from './Saved'
+import Saved from './Saved';
 
 import userProvider from "./components/userProvider";
 import Topbar from './components/Topbar'
