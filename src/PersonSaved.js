@@ -31,7 +31,8 @@ const PersonSaved = ({ match }) => {
           .get()
           .then((doc) => {
             if (doc.exists) {
-              if(doc?.data().private){
+              console.log(doc?.data().private)
+              if(doc?.data().privacy){
                 setLoadMessage("User's books are private")
                 return;
               }

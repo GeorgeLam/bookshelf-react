@@ -1,5 +1,6 @@
 import React, { Component, useState, useContext, useEffect, useRef } from "react";
 import firebase, { firestore } from "firebase";
+import {Form} from "react-bootstrap";
 
 import Subbar from "./components/Subbar";
 import SavedItems from "./components/SavedItems";
@@ -9,12 +10,14 @@ import { AccContext } from "./components/AccContext";
 let Saved = () => {
   const { accStatus, setAccStatus } = useContext(AccContext);
   const linkRef = useRef();
+  const privacySwitch = useRef();
   const [savedBooks, setSavedBooks] = React.useState();
   const [loaded, setLoaded] = React.useState();
   const [loadMessage, setLoadMessage] = React.useState("Loading books...");
   const [updateType, setUpdateType] = React.useState();  
   const [readyToUpdateDB, setReadyToUpdateDB] = React.useState();
   const [currentAcc, setCurrentAcc] = React.useState();
+  const [privacy, setPrivacy] = React.useState();
   
     useEffect(() => {                       //useEffect based on the currentAcc variable
         console.log("Checking acc status")
@@ -39,6 +42,9 @@ let Saved = () => {
                         console.log(JSON.parse(doc?.data().books).length);
                         if (JSON.parse(doc?.data().books).length < 1){
                             setLoadMessage(`You haven't saved any books!`);
+                        }
+                        if (doc?.data().privacy){
+                          setPrivacy(true)
                         }
                         else{
                             setLoadMessage()
@@ -80,6 +86,24 @@ let Saved = () => {
         setSavedBooks(savedBooks.filter((book) => book.id != e.target.id));
         setReadyToUpdateDB(true);
     };
+
+    let privacyUpdate = (e) => {
+      console.log(privacySwitch.current.checked)
+
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(accStatus)
+        .update({
+          privacy: privacySwitch.current.checked,
+        })
+        .then(function () {
+          console.log("Document successfully written!");
+        })
+        .catch(function (error) {
+          console.error("Error writing document: ", error);
+        });
+    }
 
     let copyToClipboard = () => {
       linkRef.current.select();
@@ -131,6 +155,9 @@ let Saved = () => {
                 </button>
               </div>
             </div>
+            <p>
+              <input type="checkbox" className="mx-2" label="Make my books private" ref={privacySwitch} onClick={privacyUpdate} defaultChecked={privacy}></input>Make my books private
+            </p>
             <span className="mt-2">You have saved {savedBooks?.length} items.</span>
           </div>
         )}
