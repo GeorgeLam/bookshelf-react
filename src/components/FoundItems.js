@@ -42,7 +42,7 @@ console.log(props?.book)
     <div className="card h-100">
       <div className="row card-body">
         <div className="col-8">
-          <Link className="card-title" to={"/book/" + props?.id}>{props?.book?.title}</Link>
+          <Link style={{ fontSize: 24 }} className="card-title" to={"/book/" + props?.id}>{props?.book?.title}</Link>
           <p className="card-text">{props?.book?.authors}</p>
           <p className="card-text">{props?.book?.description}</p>
           <a

@@ -70,11 +70,11 @@ const AccModal = (props) => {
         firebase
           .firestore()
           .collection("users")
-          .doc(`${newUser.displayName}`)
+          .doc(firebase.auth().currentUser.displayName)
           .set({
             username: newUser.displayName,
             email: newUser.email,
-            books: []
+            books: "[]"
           })
           .catch(function (error) {
             console.error("Error adding document: ", error);
@@ -135,7 +135,22 @@ const AccModal = (props) => {
     if (user) {
       console.log("Auth state changed: Successful log-in!");
       console.log(currentUser);
-      setAccStatus(user?.displayName);    
+      setAccStatus(user?.displayName);  
+      console.log("ne")
+      // firebase
+      //   .firestore()
+      //   .collection("users")
+      //   .doc('catsup0')
+      //   .set({
+      //     username: 'tt',
+      //     email: 'xx',
+      //     books: ""
+      //   })
+      //   .then(() => {console.log("done")})
+      //   .catch(function (error) {
+      //     console.error("Error adding document: ", error);
+      //   });
+
     }
 
     else {

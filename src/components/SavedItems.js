@@ -1,4 +1,6 @@
 import React, { useState, useContext } from "react";
+import { BrowserRouter as Router, Link } from "react-router-dom";
+
 import { AccContext } from "./AccContext";
 import Modal from "react-bootstrap/Modal";
 import SaveModal from "./SaveModal"
@@ -30,7 +32,8 @@ const SavedItems = (props) => {
     <div className="card h-100">
       <div className="row card-body">
         <div className="col-8">
-          <h5 className="card-title">{props?.book?.title}</h5>
+          {/* <h5 className="card-title">{props?.book?.title}</h5> */}
+          <Link style={{ fontSize: 24 }} className="card-title" to={"/book/" + props?.id}>{props?.book?.title}</Link>
           <p className="card-text">{props?.book?.authors}</p>
           <p className="card-text">{props?.book?.description}</p>
           <p className="rating" id="rating${counter}">

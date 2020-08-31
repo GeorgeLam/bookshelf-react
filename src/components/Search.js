@@ -164,9 +164,9 @@ const Search = () => {
     console.log("Accessing save method");
 
     //Duplication check: if duplicate found, saving is prevented
-    if (savedBooks.filter((book) => book.id == data.items[pageBookNum].id).length > 0) {
-      return alert("You've already saved this book!");
-    }
+    // if (savedBooks.filter((book) => book.id == data.items[pageBookNum].id).length > 0) {
+    //   return alert("You've already saved this book!");
+    // }
 
     setSavedBooks([
       ...savedBooks,
@@ -191,7 +191,7 @@ const Search = () => {
         .firestore()
         .collection("users")
         .doc(accStatus)
-        .set({
+        .update({
           books: JSON.stringify(savedBooks),
         })
         .then(function () {

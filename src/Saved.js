@@ -119,7 +119,7 @@ let Saved = () => {
             .firestore()
             .collection("users")
             .doc(currentAcc.accStatus)
-            .set({
+            .update({
             books: JSON.stringify(savedBooks),
             })
             .catch(function (error) {
@@ -181,6 +181,7 @@ let Saved = () => {
                   val={index}
                   updateMeth={updateMeth}
                   removeMeth={removeItem}
+                  id={book.id}
                 />
               </div>
             ))
