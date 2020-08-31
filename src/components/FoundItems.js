@@ -1,4 +1,6 @@
 import React, { useState, useContext } from "react";
+import { BrowserRouter as Router, Link } from "react-router-dom";
+
 import {AccContext} from './AccContext';
 import Modal from "react-bootstrap/Modal";
 import {MemoAccModal} from "./AccModal"
@@ -6,7 +8,7 @@ import SaveModal from "./SaveModal"
 
 const FoundItems = (props) => {
   const {accStatus, setAccStatus} = useContext(AccContext);
-
+console.log(props?.book)
   const [isOpen, setIsOpen] = React.useState(false);
   const [accModalIsOpen, setAccModalIsOpen] = React.useState(false);
   const [savingNum, setSavingNum] = React.useState("");
@@ -40,7 +42,7 @@ const FoundItems = (props) => {
     <div className="card h-100">
       <div className="row card-body">
         <div className="col-8">
-          <h5 className="card-title">{props?.book?.title}</h5>
+          <Link className="card-title" to={"/book/" + props?.id}>{props?.book?.title}</Link>
           <p className="card-text">{props?.book?.authors}</p>
           <p className="card-text">{props?.book?.description}</p>
           <a

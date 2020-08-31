@@ -74,7 +74,6 @@ const Search = () => {
     setSearchStatus("Fetching data...", startIndex);
     setLoaded()
     console.log(searchInput);
-  
 
     if (searchInput) {
       if (type == "book") {
@@ -100,7 +99,7 @@ const Search = () => {
   useEffect(() => {
     if (data) {
       setTotalItems(data.totalItems)
-
+      console.log(data)
       setTidied(data.items.map((book) => {
         if (book?.volumeInfo?.authors?.length > 1) {
           console.log(book.volumeInfo.authors);
@@ -268,6 +267,7 @@ const Search = () => {
                     book={book.volumeInfo}
                     val={index}
                     saveMeth={saveMethod}
+                    id={book.id}
                   />
                 </div>
               ))
