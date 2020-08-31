@@ -24,6 +24,7 @@ const Topbar = (props) => {
       .signOut()
       .then(function () {
         console.log("Signed Out"); // Sign-out successful.
+        setAccStatus();
       })
       .catch(function (error) {
         console.log(error);

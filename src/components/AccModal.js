@@ -8,10 +8,10 @@ import { AccContext } from "./AccContext";
 
 
 const AccModal = (props) => {
-  // let [openStatus, setOpenStatus] = React.useState(); 
   console.log("Modal acc opened");
   const [isOpen, setIsOpen] = React.useState(props.isOpen);
-  // if (props.isOpen) setOpenStatus(true);
+  // const [username, setUsername] = React.useState();
+  // const [signInEmail, setSignInEmail] = React.useState();
 
   const [logInStatus, setLogInStatus] = React.useState(
     firebase.auth().currentUser
@@ -98,7 +98,7 @@ const AccModal = (props) => {
 
   const handleSignIn = (e) => {
     e.preventDefault();
-    console.log("handling sign-in...");
+    console.log("Handling sign-in...");
     var email = document.getElementById("sign-in-email").value;
     var password = document.getElementById("sign-in-pw").value;
     firebase
@@ -108,18 +108,13 @@ const AccModal = (props) => {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
-        // [START_EXCLUDE]
         if (errorCode === "auth/wrong-password") {
           alert("Wrong password.");
         } else {
           alert(errorMessage);
         }
         console.log(error);
-        //document.getElementById('quickstart-sign-in').disabled = false;
-        // [END_EXCLUDE]
       });
-    //console.log("logged in!")
-    //authCheck();
     props.setIsOpen(false);
   };
 
@@ -129,15 +124,6 @@ const AccModal = (props) => {
       .signOut()
       .then(function () {
         console.log("Signed Out"); // Sign-out successful.
-        // localStorage.setItem('fromDB', []);
-        // $("#my-acc").text("Log In");
-        // $("#my-acc").attr("data-target", "#accountModal");
-        //setCurrentUser("No current user");
-        //console.log(currentUser);
-        //authCheck();
-        // localStorage.setItem(`books`, "[]");
-        // console.log("rewriting LS bc hLO func");
-        // window.location.href = "./index.html";
       })
       .catch(function (error) {
         console.log(error);
@@ -146,86 +132,21 @@ const AccModal = (props) => {
   };
 
   firebase.auth().onAuthStateChanged(async function (user) {
-    console.log("auth state changed")
-    console.log(user?.email);
-    console.log(user?.displayName);
-    //setCurrentUser(user?.email);
+    console.log("Auth state changed")
 
     if (user) {
       console.log("Successful log-in!");
-      console.log(firebase.auth().currentUser);
-      // setCurrentUser(user?.email);
       console.log(currentUser);
-      console.log(user);
-      setAccStatus(user?.displayName);
-    
-      // let createBookRec = await firebase
-      //   .firestore()
-      //   .collection("users")
-      //   .doc(user?.displayName)
-      //   .set(
-      //     {
-      //       email: user?.email,
-      //       username: user?.displayName,
-      //       books: localStorage.getItem('books2'),
-      //     }
-      //   );
-
-      
-
-      // let docQuery = 
-      let dbQuery = await firebase.firestore().collection("users").doc(user?.displayName).get().then((doc) => {
-        if (doc.exists) {
-            console.log("Document data:", doc.data());
-            let retrievedBooks = JSON.parse(doc?.data()?.books);
-            console.log(retrievedBooks);
-            localStorage.setItem("fromDB", JSON.stringify(retrievedBooks));
-        }
-      })
-
-    
+      setAccStatus(user?.displayName);    
     }
 
-      
-      
-    
-      
-      
-    // db.collection("users")
-    //   .doc(`${user.displayName}`)
-    //   .set({
-    //     books: JSON.stringify(savedBooks),
-    //   })
-    //   .then(function () {
-    //     console.log("Document successfully written!");
-    //   })
-    //   .catch(function (error) {
-    //     console.error("Error writing document: ", error);
-    //   });
-  
-
-
-      // // User is signed in.
-      //setLogInStatus(true);
-      //console.log("Log in status: " + logInStatus)
-      // let uName = await user.displayName;
-      // ...
     else {
-      // $("#acc-status").text(`You're not logged in`);
-      //console.log("Not logged in");
-      // setCurrentUser(null)
+      console.log("Not logged in");
       setAccStatus(null);
       localStorage.setItem("fromDB", null);
 
       console.log(currentUser);
-
-      //setLogInStatus(false);
-      //console.log("Log in status: " + logInStatus);
       console.log("Not logged in");
-      //setAccStatus("Logged out");
-
-      // User is signed out.
-      // ...
     }
   }
   )

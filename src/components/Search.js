@@ -11,7 +11,9 @@ let booksShown = 0;
 
 const Search = () => {
     const { accStatus, setAccStatus } = useContext(AccContext);
-    // console.log(accStatus);
+    console.log(accStatus);
+      const [currentAcc, setCurrentAcc] = React.useState();
+
     let [type, setType] = useState("");
     let [index, setIndex] = useState(0);
     let [data, setData] = useState("");
@@ -26,7 +28,9 @@ const Search = () => {
     let [readyToTidy, setReadyToTidy] = useState();
     let [tidied, setTidied] = useState("");
     let [newSave, setNewSave] = useState("");
-    let [savedBooks, setSavedBooks] = useState(JSON.parse(localStorage.getItem('books')) || []);
+    let [savedBooks, setSavedBooks] = useState();
+    let [updatingDBList, setUpdatingDBList] = useState();
+    let [syncToDB, setSyncToDB] = useState();
 
   let searchBookFunc = () => {
     if(!searchInput) return;
@@ -66,7 +70,7 @@ const Search = () => {
   let searcher = async () => {
     console.log("Search func")
     setSearchStatus("Fetching data...");
-    setLoaded(false)
+    setLoaded()
     console.log(searchInput);
   
 
@@ -75,21 +79,17 @@ const Search = () => {
         console.log("type is book", searchQuery, startIndex)
       } else if (type == "author") {
         console.log("author")
-
       }
 
       console.log(url)
-
       let response = await fetch(url);
       console.log(data);
       setData(await response.json());
       setLoaded(true);
 
-
       console.log(data.items);
       console.log(loaded);
       setReadyToTidy(true);
-    
       }
     }
 
@@ -122,7 +122,7 @@ const Search = () => {
   let navPrev = () => {
     if (startIndex != 0) {
       setStartIndex(startIndex - 10);
-      setLoaded(false)
+      setLoaded()
       searcher();
     }
   }
@@ -130,37 +130,40 @@ const Search = () => {
   let navForward = () => {
     console.log("Forward");
     setStartIndex(startIndex + 10);
-    setLoaded(false);
+    setLoaded();
     searcher();
 
   }
 
+  //Retrieving DB books on load and storing in an array
+
+  useEffect(() => {
+    if (accStatus) {
+      console.log(`Retrieving books from: ${accStatus}`)
+
+      let retrieveDB = async () => {
+        let dbQuery = await firebase
+          .firestore()
+          .collection("users")
+          .doc(accStatus)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              console.log("Document data:", doc.data());  
+              setSavedBooks(JSON.parse(doc?.data()?.books));
+            }
+          });
+      };
+      retrieveDB();
+    }
+  }, [accStatus]);
+
+  useEffect(() => {savedBooks && console.log(savedBooks)}, [savedBooks])
+
   let saveMethod = (pageBookNum, savedReview, savedRating) => {
-    if(accStatus) console.log("yup you're logged in")
-
-
-
-    console.log("Accessing save meth")
-    // setSavedBooks(
-    //   savedBooks.push(
-    //     {
-    //       title: data.items[pageBookNum].volumeInfo.title,
-    //       authors: data.items[pageBookNum].volumeInfo.authors,
-    //       date: data.items[pageBookNum].volumeInfo.publishedDate,
-    //       image: data.items[pageBookNum].volumeInfo.imageLinks
-    //         .smallThumbnail,
-    //       id: data.items[pageBookNum].id,
-    //       learnLink: `https://books.google.com/books?id=${data.items[pageBookNum].id}`,
-    //       rating: savedRating,
-    //       review: savedReview,
-    //     }
-    //   )
-    // )
-    // localStorage.setItem("books", JSON.stringify(savedBooks));
-
-    const updatingDBList = JSON.parse(localStorage.getItem('fromDB'));
-    updatingDBList.push(
-      {
+    console.log("Accessing save method")
+    setSavedBooks(
+      [...savedBooks, {
           title: data.items[pageBookNum].volumeInfo.title,
           authors: data.items[pageBookNum].volumeInfo.authors,
           date: data.items[pageBookNum].volumeInfo.publishedDate,
@@ -170,33 +173,30 @@ const Search = () => {
           learnLink: `https://books.google.com/books?id=${data.items[pageBookNum].id}`,
           rating: savedRating,
           review: savedReview,
-        }
+        }]
     )
-    console.log(updatingDBList); 
-    
-    
-
-    let writeToDB = () => {
-      firebase.firestore().collection("users")
-            .doc(`${accStatus}`)
-            .set({
-              books: JSON.stringify(updatingDBList),
-            })
-            .then(function () {
-              console.log("Document successfully written!");
-            })
-            .catch(function (error) {
-              console.error("Error writing document: ", error);
-            });
-        }
-      
-
-    writeToDB();
-
-
-
-
+    setSyncToDB(true);
   }
+
+  useEffect(() => {
+    if (syncToDB){
+      console.log("Syncing to DB...")
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(accStatus)
+        .set({
+          books: JSON.stringify(savedBooks),
+        })
+        .then(function () {
+          console.log("Document successfully written!");
+        })
+        .catch(function (error) {
+          console.error("Error writing document: ", error);
+        });
+      setSyncToDB()
+     }
+  }, [syncToDB])
 
     return (
       <div>
@@ -251,7 +251,7 @@ const Search = () => {
         <div className="row">
           <div className="row found-items">
             {loaded ? (
-              data.items.map((book, index) => (
+              data?.items?.map((book, index) => (
                 <div
                   className="col col-12 col-md-6 py-2"
                   id={book.id}

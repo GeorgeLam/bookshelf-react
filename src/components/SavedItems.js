@@ -35,14 +35,14 @@ const SavedItems = (props) => {
           <p className="rating" id="rating${counter}">
             {props?.book?.rating
               ? (`You rated this book ${props?.book?.rating}/5.`)
-              : "You haven't rated this book"}
+              : "You haven't rated this book."}
           </p>
           <p className="review" id="review${counter}">
             <strong>Your review:</strong>
             <br />{" "}
             {props?.book?.review
               ? props?.book?.review
-              : "You haven't reviewed this book"}
+              : "You haven't reviewed this book."}
           </p>
           <a
             href="#"

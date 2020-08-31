@@ -10,7 +10,7 @@ const FoundItems = (props) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [accModalIsOpen, setAccModalIsOpen] = React.useState(false);
   const [savingNum, setSavingNum] = React.useState("");
-  const [rating, handleRating] = React.useState("You have not rated this book.");
+  const [rating, handleRating] = React.useState("");
   const [review, handleReview] = React.useState("");
 
   const showSaveModal = (e) => {
