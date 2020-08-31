@@ -132,21 +132,16 @@ const AccModal = (props) => {
   };
 
   firebase.auth().onAuthStateChanged(async function (user) {
-    console.log("Auth state changed")
-
     if (user) {
-      console.log("Successful log-in!");
+      console.log("Auth state changed: Successful log-in!");
       console.log(currentUser);
       setAccStatus(user?.displayName);    
     }
 
     else {
-      console.log("Not logged in");
-      setAccStatus(null);
+      console.log("Auth state changed: Not logged in");
+      // setAccStatus(null);
       localStorage.setItem("fromDB", null);
-
-      console.log(currentUser);
-      console.log("Not logged in");
     }
   }
   )

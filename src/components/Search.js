@@ -55,7 +55,7 @@ const Search = () => {
     else if (type == "author") {
       setUrl(`https://www.googleapis.com/books/v1/volumes?q=+inauthor:${searchQuery}&startIndex=${startIndex}`)
       }
-    }, [type, index, searchQuery]
+    }, [type, index, searchQuery, startIndex]
   )
 
   useEffect(() => {
@@ -67,9 +67,11 @@ const Search = () => {
     setSearchInput(e.target.value);
   }
 
+  // useEffect(searcher(), [startIndex])
+
   let searcher = async () => {
     console.log("Search func")
-    setSearchStatus("Fetching data...");
+    setSearchStatus("Fetching data...", startIndex);
     setLoaded()
     console.log(searchInput);
   
@@ -100,7 +102,6 @@ const Search = () => {
       setTotalItems(data.totalItems)
 
       setTidied(data.items.map((book) => {
-        console.log(book);
         if (book?.volumeInfo?.authors?.length > 1) {
           console.log(book.volumeInfo.authors);
           book.volumeInfo.authors = book.volumeInfo.authors.join(" and ");
@@ -123,7 +124,7 @@ const Search = () => {
     if (startIndex != 0) {
       setStartIndex(startIndex - 10);
       setLoaded()
-      searcher();
+      // searcher();
     }
   }
 
@@ -131,7 +132,7 @@ const Search = () => {
     console.log("Forward");
     setStartIndex(startIndex + 10);
     setLoaded();
-    searcher();
+    // searcher();
 
   }
 
