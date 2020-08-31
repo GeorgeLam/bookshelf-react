@@ -161,20 +161,26 @@ const Search = () => {
   useEffect(() => {savedBooks && console.log(savedBooks)}, [savedBooks])
 
   let saveMethod = (pageBookNum, savedReview, savedRating) => {
-    console.log("Accessing save method")
-    setSavedBooks(
-      [...savedBooks, {
-          title: data.items[pageBookNum].volumeInfo.title,
-          authors: data.items[pageBookNum].volumeInfo.authors,
-          date: data.items[pageBookNum].volumeInfo.publishedDate,
-          image: data.items[pageBookNum].volumeInfo.imageLinks
-            .smallThumbnail,
-          id: data.items[pageBookNum].id,
-          learnLink: `https://books.google.com/books?id=${data.items[pageBookNum].id}`,
-          rating: savedRating,
-          review: savedReview,
-        }]
-    )
+    console.log("Accessing save method");
+
+    //Duplication check: if duplicate found, saving is prevented
+    if (savedBooks.filter((book) => book.id == data.items[pageBookNum].id).length > 0) {
+      return alert("You've already saved this book!");
+    }
+
+    setSavedBooks([
+      ...savedBooks,
+      {
+        title: data.items[pageBookNum].volumeInfo.title,
+        authors: data.items[pageBookNum].volumeInfo.authors,
+        date: data.items[pageBookNum].volumeInfo.publishedDate,
+        image: data.items[pageBookNum].volumeInfo.imageLinks.smallThumbnail,
+        id: data.items[pageBookNum].id,
+        learnLink: `https://books.google.com/books?id=${data.items[pageBookNum].id}`,
+        rating: savedRating,
+        review: savedReview,
+      },
+    ]);
     setSyncToDB(true);
   }
 
