@@ -9,6 +9,7 @@ const SavedItems = (props) => {
   const [rating, handleRatingUpdate] = React.useState(1);
   const [review, handleReviewUpdate] = React.useState("");
   const [ratingConvert, handleRatingConv] = React.useState("");
+  console.log(props.parentPage)
 
   const {accStatus, setAccStatus} = useContext(AccContext);
 
@@ -33,35 +34,37 @@ const SavedItems = (props) => {
           <p className="card-text">{props?.book?.authors}</p>
           <p className="card-text">{props?.book?.description}</p>
           <p className="rating" id="rating${counter}">
-            {props?.book?.rating
-              ? (`You rated this book ${props?.book?.rating}/5.`)
-              : "You haven't rated this book."}
+              {props?.book?.rating ? `This book has been rated ${props.book?.rating}/5.` : `This book hasn't been rated.`}
           </p>
           <p className="review" id="review${counter}">
-            <strong>Your review:</strong>
+            <strong>Review:</strong>
             <br />{" "}
             {props?.book?.review
               ? props?.book?.review
-              : "You haven't reviewed this book."}
+              : "This book hasn't been reviewed."}
           </p>
-          <a
-            href="#"
-            className="btn btn-sm btn-primary edit-book"
-            id={props?.book?.id}
-            data-toggle="modal"
-            data-target="#ratingModal"
-            onClick={showModal}
-          >
-            Edit
-          </a>
-          <a
-            href="#"
-            className="btn btn-sm btn-primary unsave-book ml-1"
-            id={props?.book?.id}
-            onClick={props.removeMeth}
-          >
-            Remove
-          </a>
+          {!props?.parentPage && (
+            <React.Fragment>
+              <a
+                href="#"
+                className="btn btn-sm btn-primary edit-book"
+                id={props?.book?.id}
+                data-toggle="modal"
+                data-target="#ratingModal"
+                onClick={showModal}
+              >
+                Edit
+              </a>
+              <a
+                href="#"
+                className="btn btn-sm btn-primary unsave-book ml-1"
+                id={props?.book?.id}
+                onClick={props.removeMeth}
+              >
+                Remove
+              </a>
+            </React.Fragment>
+          )}
           {/* <SaveModal status={isOpen} /> */}
         </div>
         {<img className="col-4" src={props?.book?.image} alt="sans" />}

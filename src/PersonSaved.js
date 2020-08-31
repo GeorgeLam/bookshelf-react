@@ -12,7 +12,6 @@ const PersonSaved = ({ match }) => {
   const {
     params: { personId },
   } = match;
-  const { accStatus, setAccStatus } = useContext(AccContext);
   const [savedBooks, setSavedBooks] = React.useState();
   const [loaded, setLoaded] = React.useState();
   const [loadMessage, setLoadMessage] = React.useState("Loading books...");
@@ -32,6 +31,10 @@ const PersonSaved = ({ match }) => {
           .get()
           .then((doc) => {
             if (doc.exists) {
+              if(doc?.data().private){
+                setLoadMessage("User's books are private")
+                return;
+              }
               console.log("Document data:", doc.data());
               console.log(JSON.parse(doc?.data().books).length);
               if (JSON.parse(doc?.data().books).length < 1) {
@@ -44,7 +47,8 @@ const PersonSaved = ({ match }) => {
               //console.log(retrievedBooks);
               //localStorage.setItem("fromDB", JSON.stringify(retrievedBooks));
             }
-          });
+            else{setLoadMessage(`User '${personId}' doesn't exist!`)}
+          })
       };
       retrieveDB();
     }
@@ -134,6 +138,7 @@ const PersonSaved = ({ match }) => {
                   val={index}
                   updateMeth={updateMeth}
                   removeMeth={removeItem}
+                  parentPage="PersonSaved"
                 />
               </div>
             ))

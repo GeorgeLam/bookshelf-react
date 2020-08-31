@@ -4,6 +4,7 @@ import './App.css';
 import Home from './Home';
 import Saved from './Saved';
 import PersonSaved from './PersonSaved';
+import Book from './Book';
 
 import userProvider from "./components/userProvider";
 import Topbar from './components/Topbar'
@@ -16,13 +17,6 @@ import { AccContext } from "./components/AccContext";
 import { BooksContext } from "./components/BooksContext";
 
 function App() {
-  //let [logInStatus, setLogInStatus] = useState(false);
-
-  // let signInMeth = () => {
-  //   setLogInStatus(true);
-  //   console.log(logInStatus)
-  // }
-
   const [accStatus, setAccStatus] = useState();
   const [storedBooks, setStoredBooks] = useState();
 
@@ -38,6 +32,8 @@ function App() {
             <Route path="/saved/:personId" component={PersonSaved} />
           </BooksContext.Provider>
         </AccContext.Provider>
+        
+        <Route path="/book/:bookId" component={Book} />
 
         {/* <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS --> */}
