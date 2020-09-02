@@ -163,10 +163,10 @@ const Search = () => {
   let saveMethod = (pageBookNum, savedReview, savedRating) => {
     console.log("Accessing save method");
 
-    //Duplication check: if duplicate found, saving is prevented
-    // if (savedBooks.filter((book) => book.id == data.items[pageBookNum].id).length > 0) {
-    //   return alert("You've already saved this book!");
-    // }
+    // Duplication check: if duplicate found, saving is prevented
+    if (savedBooks.filter((book) => book.id == data.items[pageBookNum].id).length > 0) {
+      return alert("You've already saved this book!");
+    }
 
     setSavedBooks([
       ...savedBooks,
