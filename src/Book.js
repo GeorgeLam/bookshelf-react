@@ -37,11 +37,14 @@ const Book = ({ match }) => {
             <div className="row card-body">
               <div className="col-6">
                 <BackButton />
-                <h4>
-                  {data?.volumeInfo?.title}
-                </h4>
+                <h4>{data?.volumeInfo?.title}</h4>
                 <h6 className="card-text">{data?.volumeInfo?.authors}</h6>
-                <p className="card-text">{data?.volumeInfo?.description}</p>
+                <p
+                  className="card-text"
+                  dangerouslySetInnerHTML={{
+                    __html: data?.volumeInfo?.description,
+                  }}
+                ></p>
                 <a
                   href={data?.volumeInfo?.infoLink}
                   target="_blank"
