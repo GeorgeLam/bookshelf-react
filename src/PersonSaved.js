@@ -31,9 +31,9 @@ const PersonSaved = ({ match }) => {
           .get()
           .then((doc) => {
             if (doc.exists) {
-              console.log(doc?.data().private)
-              if(doc?.data().privacy){
-                setLoadMessage("User's books are private")
+              console.log(doc?.data().private);
+              if (doc?.data().privacy) {
+                setLoadMessage("User's books are private");
                 return;
               }
               console.log("Document data:", doc.data());
@@ -47,9 +47,10 @@ const PersonSaved = ({ match }) => {
               setLoaded(true);
               //console.log(retrievedBooks);
               //localStorage.setItem("fromDB", JSON.stringify(retrievedBooks));
+            } else {
+              setLoadMessage(`User '${personId}' doesn't exist!`);
             }
-            else{setLoadMessage(`User '${personId}' doesn't exist!`)}
-          })
+          });
       };
       retrieveDB();
     }
@@ -87,7 +88,6 @@ const PersonSaved = ({ match }) => {
     console.log(savedBooks);
     // localStorage.setItem('books2', JSON.stringify(savedBooks));
     if (changedTheAlter) {
-      console.log("HEYYYYYYYYYYYYYYYYYY");
       console.log(savedBooks);
       firebase
         .firestore()
@@ -107,18 +107,8 @@ const PersonSaved = ({ match }) => {
   return (
     <div className="container">
       <Subbar title="Saved Books" />
-      {/* <div className="row justify-content-center mb-3" id="item-count">
-                    {this.state.loaded ? (
-                        <span>
-                            Viewing {this.state.startIndex + 1} - {this.state.startIndex + 11}{" "}
-                of {this.state.totalItems} items.
-                        </span>
-                    ) : (
-                            this.state.searchStatus
-                        )}
-                </div> */}
 
-      <div className="">
+      <div>
         <div className="row found-items">
           <AccContext.Consumer>
             {(value) => {
