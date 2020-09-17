@@ -1,17 +1,18 @@
-import React, {useState} from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Home from './Home';
-import Saved from './Saved';
-import PersonSaved from './PersonSaved';
-import Book from './Book';
+import React, { useState } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import Home from "./Home";
+import Results from "./Results";
+import Saved from "./Saved";
+import PersonSaved from "./PersonSaved";
+import Book from "./Book";
 
 import userProvider from "./components/userProvider";
-import Topbar from './components/Topbar'
-import Subbar from './components/Subbar'
+import Topbar from "./components/Topbar";
+import Subbar from "./components/Subbar";
 import Search from "./components/Search";
 import FoundItems from "./components/FoundItems";
-import Pagebuttons from './components/Pagebuttons'
+import Pagebuttons from "./components/Pagebuttons";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { AccContext } from "./components/AccContext";
 import { BooksContext } from "./components/BooksContext";
@@ -29,10 +30,16 @@ function App() {
 
             <Route path="/" exact component={Home} />
             <Route path="/saved" exact component={Saved} />
+            <Route path="/search/:searchQ" component={Results}>
+              <Route
+                path="/search/:queryType/:searchQ/:queryPage"
+                component={Results}
+              />
+            </Route>
             <Route path="/saved/:personId" component={PersonSaved} />
           </BooksContext.Provider>
         </AccContext.Provider>
-        
+
         <Route path="/book/:bookId" component={Book} />
 
         {/* <!-- Optional JavaScript -->

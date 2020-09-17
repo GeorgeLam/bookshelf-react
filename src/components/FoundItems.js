@@ -1,14 +1,14 @@
 import React, { useState, useContext } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 
-import {AccContext} from './AccContext';
+import { AccContext } from "./AccContext";
 import Modal from "react-bootstrap/Modal";
-import {MemoAccModal} from "./AccModal"
-import SaveModal from "./SaveModal"
+import { MemoAccModal } from "./AccModal";
+import SaveModal from "./SaveModal";
 
 const FoundItems = (props) => {
-  const {accStatus, setAccStatus} = useContext(AccContext);
-console.log(props?.book)
+  const { accStatus, setAccStatus } = useContext(AccContext);
+  // console.log(props?.book)
   const [isOpen, setIsOpen] = React.useState(false);
   const [accModalIsOpen, setAccModalIsOpen] = React.useState(false);
   const [savingNum, setSavingNum] = React.useState("");
@@ -18,10 +18,10 @@ console.log(props?.book)
   const showSaveModal = (e) => {
     e.preventDefault();
     console.log(accStatus);
-    if(!accStatus) {
+    if (!accStatus) {
       setAccModalIsOpen(true);
       //alert("You're not logged in!")
-      return
+      return;
     }
     //console.log(e.target.id);
     setSavingNum(e.target.id);
@@ -32,17 +32,23 @@ console.log(props?.book)
   const hideModal = () => {
     setIsOpen(false);
   };
-  
+
   const saveFunc = () => {
-    console.log("Saving", savingNum)
-    console.log()
-  }
+    console.log("Saving", savingNum);
+    console.log();
+  };
 
   return (
     <div className="card h-100">
       <div className="row card-body">
         <div className="col-8">
-          <Link style={{ fontSize: 24 }} className="card-title" to={"/book/" + props?.id}>{props?.book?.title}</Link>
+          <Link
+            style={{ fontSize: 24 }}
+            className="card-title"
+            to={"/book/" + props?.id}
+          >
+            {props?.book?.title}
+          </Link>
           <p className="card-text">{props?.book?.authors}</p>
           <p className="card-text">{props?.book?.description}</p>
           <a
@@ -77,7 +83,7 @@ console.log(props?.book)
           />
         }
       </div>
-          
+
       <SaveModal
         bookTitle={props?.book?.title}
         isOpen={isOpen}
