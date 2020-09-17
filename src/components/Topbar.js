@@ -1,13 +1,13 @@
-import React, {useContext, useState} from 'react';
-import firebase, { firestore } from 'firebase';
-import Firebase from './Firebase';
-import {MemoAccModal} from "./AccModal";
+import React, { useContext, useState } from "react";
+import firebase, { firestore } from "firebase";
+import Firebase from "./Firebase";
+import { MemoAccModal } from "./AccModal";
 import Modal from "react-bootstrap/Modal";
-import {AccContext} from "./AccContext";
+import { AccContext } from "./AccContext";
 
 const Topbar = (props) => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const {accStatus, setAccStatus} = useContext(AccContext);
+  const { accStatus, setAccStatus } = useContext(AccContext);
 
   const showModal = (e) => {
     e.preventDefault();
@@ -15,7 +15,7 @@ const Topbar = (props) => {
     //setSavingNum(e.target.id);
     setIsOpen(true);
     //console.log(isOpen)
-    console.log(props)
+    console.log(props);
   };
 
   let handleSignOut = () => {
@@ -29,7 +29,7 @@ const Topbar = (props) => {
       .catch(function (error) {
         console.log(error);
       });
-  }
+  };
 
   window.onload = function () {
     //authCheck();

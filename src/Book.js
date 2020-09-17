@@ -9,6 +9,9 @@ const Book = ({ match }) => {
     params: { bookId },
   } = match;
 
+  let [book, setBook] = useState("");
+  // let [tidied, setTidied] = useState("");
+
   let [data, setData] = useState();
 
   useEffect(() => {
@@ -20,9 +23,42 @@ const Book = ({ match }) => {
     })();
   }, []);
 
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [data]);
+
   useEffect(() => {
-    console.log(data);
+    console.log("ue");
+    if (data) {
+      // setTotalItems(data.totalItems);
+      // setSearchStatus();
+      console.log(data);
+      // let tidier = [...data];
+      // if (!data.items) {
+      //   console.log("No");
+      //   // setSearchStatus("No items were found!");
+      //   return;
+      // }
+      let tidiedBook = {};
+      if (data?.volumeInfo?.authors?.length > 1) {
+        console.log(data.volumeInfo.authors);
+        tidiedBook.authors = data.volumeInfo.authors.join(" and ");
+      }
+      if (data?.volumeInfo?.publishedDate?.length > 4) {
+        tidiedBook.publishedDate = data.volumeInfo.publishedDate
+          .toString()
+          .slice(0, 4);
+      }
+      if (data?.volumeInfo?.description?.length > 300) {
+        tidiedBook.description =
+          data.volumeInfo.description.slice(0, 300) + "...";
+      }
+
+      setBook(tidiedBook);
+    }
   }, [data]);
+
+  // useEffect(console.log(book), [book]);
 
   const GoBack = ({ history }) => {
     history.goBack();
@@ -34,15 +70,32 @@ const Book = ({ match }) => {
       <div className="row">
         <div className="col col-10 mx-auto">
           <div className="card h-100">
-            <div className="row card-body">
-              <div className="col-6">
-                <BackButton />
+            <div className="col-2 my-3">
+              <BackButton />
+            </div>
+            <div className="row card-body d-flex flex-row">
+              {
+                <img
+                  className="col-12 col-md-4 text-center mx-auto mb-3 order-1 order-md-3"
+                  src={
+                    data?.volumeInfo?.imageLinks?.smallThumbnail ||
+                    data?.volumeInfo?.imageLinks
+                  }
+                  alt="sans"
+                />
+              }
+
+              <div className="col-12 col-md-6 order-3 order-md-1">
                 <h4>{data?.volumeInfo?.title}</h4>
-                <h6 className="card-text">{data?.volumeInfo?.authors}</h6>
+                <h6 className="card-text">
+                  {data?.volumeInfo?.authors.length > 1
+                    ? data?.volumeInfo?.authors.join(" and ")
+                    : data?.volumeInfo?.authors}
+                </h6>
                 <p
                   className="card-text"
                   dangerouslySetInnerHTML={{
-                    __html: data?.volumeInfo?.description,
+                    __html: data?.volumeInfo?.description.slice(0, 500) + "...",
                   }}
                 ></p>
                 <a
@@ -53,16 +106,6 @@ const Book = ({ match }) => {
                   Learn More
                 </a>
               </div>
-              {
-                <img
-                  className="col-4 text-center mx-auto"
-                  src={
-                    data?.volumeInfo?.imageLinks?.smallThumbnail ||
-                    data?.volumeInfo?.imageLinks
-                  }
-                  alt="sans"
-                />
-              }
             </div>
           </div>
         </div>

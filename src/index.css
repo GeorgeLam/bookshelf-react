@@ -15,8 +15,9 @@ code {
 .bg {
   background: url(./img/bg.jpg);
   min-height: 100vh;
-  min-width: 100vw;
-  background-size: contain;
+  width: 100vw;
+  max-width: 100vw;
+  background-size: cover;
 }
 
 .main {
@@ -31,6 +32,16 @@ code {
   width: 60%;
   margin: 0 auto;
   border-radius: 5px;
+}
+
+@media (max-width: 500px) {
+  .mainTitle {
+    font-size: 2rem;
+  }
+
+  .containezr {
+    width: 90%;
+  }
 }
 
 .searchComponent {

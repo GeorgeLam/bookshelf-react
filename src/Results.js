@@ -9,6 +9,7 @@ import firebase, { firestore } from "firebase";
 import { useHistory } from "react-router-dom";
 
 import Search from "./components/Search";
+import Subbar from "./components/Subbar";
 import FoundItems from "./components/FoundItems";
 import Pagebuttons from "./components/Pagebuttons";
 import { AccContext } from "./components/AccContext";
@@ -39,8 +40,7 @@ const Results = ({ match }) => {
   let [searchInput, setSearchInput] = useState(searchQ);
   let [searchStatus, setSearchStatus] = useState("");
   let [url, setUrl] = useState("");
-  let [startIndex, setStartIndex] = useState(0);
-  let [foundItems, setFoundItems] = useState(0);
+
   let [totalItems, setTotalItems] = useState(0);
   let [readyToTidy, setReadyToTidy] = useState();
   let [tidied, setTidied] = useState("");
@@ -48,25 +48,6 @@ const Results = ({ match }) => {
   let [savedBooks, setSavedBooks] = useState();
   let [updatingDBList, setUpdatingDBList] = useState();
   let [syncToDB, setSyncToDB] = useState();
-
-  let searchBookFunc = () => {
-    if (!searchQ) {
-      console.log("NO SEARCH ENTRY ADDED!");
-      return;
-    }
-    setSearchQuery(searchQ);
-    setType(queryType);
-    setIndex(0);
-    setStartIndex(0);
-  };
-
-  // let searchAuthorFunc = () => {
-  //   if (!searchInput) return;
-  //   setSearchQuery(searchInput);
-  //   setType("author");
-  //   setIndex(0);
-  //   setStartIndex(0);
-  // };
 
   useEffect(() => {
     if (queryType == "b") {
@@ -83,13 +64,6 @@ const Results = ({ match }) => {
   useEffect(() => {
     if (url) searcher();
   }, [url]);
-
-  let handleSearchInput = (e) => {
-    e.preventDefault();
-    setSearchInput(e.target.value);
-  };
-
-  // useEffect(searcher(), [startIndex])
 
   let searcher = async () => {
     console.log("Search func");
@@ -117,11 +91,13 @@ const Results = ({ match }) => {
   };
 
   useEffect(() => {
+    console.log("ue");
     if (data.items) {
       setTotalItems(data.totalItems);
       setSearchStatus();
       console.log(data);
       if (!data.items) {
+        console.log("No");
         setSearchStatus("No items were found!");
         return;
       }
@@ -144,15 +120,6 @@ const Results = ({ match }) => {
       );
     }
   }, [data]);
-
-  ///////////////////////
-
-  // useEffect(() => {
-  //   if (loaded) {
-  //     searchComponent.current.classList.add("searchComponent");
-  //     searchComponent.current.scrollIntoView({ behavior: "smooth" });
-  //   }
-  // }, [loaded]);
 
   let navPrev = () => {
     if (queryPage != 0) {
@@ -254,10 +221,11 @@ const Results = ({ match }) => {
       className="container"
       ref={searchComponent}
     >
-      <div className="mt-5">
+      {" "}
+      <Subbar />
+      <div className="mt-1">
         <Search searchQ={searchQ} />
       </div>
-
       <div className="row justify-content-center mb-3" id="item-count">
         {loaded && data.items ? (
           <span>
@@ -267,9 +235,7 @@ const Results = ({ match }) => {
         ) : (
           searchStatus
         )}
-        {/* {loaded && !data.items && setSearchStatus("No items were found!")} */}
       </div>
-
       <div className="row">
         <div className="row found-items">
           {loaded ? (
@@ -294,7 +260,6 @@ const Results = ({ match }) => {
           )}
         </div>
       </div>
-
       <div className="row justify-content-center my-3" id="pageButtons">
         {!searchStatus && queryPage != 0 && (
           <button
