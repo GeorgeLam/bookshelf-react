@@ -36,7 +36,7 @@ const Topbar = (props) => {
   };
 
   return (
-    <div className="row bg-light account d-flex flex-row justify-content-center">
+    <div className="container-fluid bg-light account d-flex flex-row justify-content-center buttonsContainer">
       <div className="acc-buttons">
         {/* <span>{this.context}</span> */}
         {/* <!-- Button trigger modal --> */}

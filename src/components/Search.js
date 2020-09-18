@@ -28,7 +28,11 @@ const Search = (props) => {
               ></input>
               <div className="input-group-append">
                 <button
-                  className="btn btn-outline-secondary"
+                  className={
+                    props.dark
+                      ? "btn btn-outline-light"
+                      : "btn btn-outline-secondary"
+                  }
                   type="button"
                   id="search-book"
                   onClick={() => {
@@ -38,7 +42,11 @@ const Search = (props) => {
                   Book
                 </button>
                 <button
-                  className="btn btn-outline-secondary"
+                  className={
+                    props.dark
+                      ? "btn btn-outline-light"
+                      : "btn btn-outline-secondary"
+                  }
                   type="button"
                   id="search-author"
                   onClick={() => {

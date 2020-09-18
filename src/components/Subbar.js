@@ -14,17 +14,11 @@ const Subbar = (props) => {
             )}
           </div>
         </div>
-        <div className="row justify-content-center mb-4">
-          {/* <a href="/" id="saved-books" className="mx-2">
-                        Find Books
-                    </a> */}
+        <div className="row justify-content-center mb-4 mainLinks">
           <div className="mr-2">
             <Link to="/">Find Books</Link>
           </div>
           <Link to="/saved">Saved Books</Link>
-          {/* <a href="/saved" id="saved-books" className="mx-2">
-                        Saved Books
-                    </a> */}
         </div>
       </div>
     </div>

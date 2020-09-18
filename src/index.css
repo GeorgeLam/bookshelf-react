@@ -13,11 +13,23 @@ code {
 }
 
 .bg {
-  background: url(./img/bg.jpg);
-  min-height: 100vh;
+  background: url(/static/media/bg.a5e3913c.jpg);
+  height: calc(100% - 24px);
   width: 100vw;
   max-width: 100vw;
   background-size: cover;
+  position: absolute;
+  /* top: -15px;*/
+}
+
+.buttonsContainer {
+  /* width: 50%; */
+  margin: 0 auto;
+  /* color: white; */
+}
+
+.acc-buttons {
+  z-index: 100;
 }
 
 .main {
@@ -28,10 +40,15 @@ code {
 }
 
 .containezr {
-  background: white;
+  background: rgba(0, 0, 0, 0.7);
   width: 60%;
   margin: 0 auto;
   border-radius: 5px;
+}
+
+.containezr a,
+.containezr span {
+  color: white;
 }
 
 @media (max-width: 500px) {
@@ -42,6 +59,14 @@ code {
   .containezr {
     width: 90%;
   }
+}
+
+.containezr input {
+  border: 1px solid white;
+}
+
+.containezr button:hover {
+  color: black;
 }
 
 .searchComponent {

@@ -8,7 +8,7 @@ const Home = () => {
       <div className="main">
         <div className="containezr">
           <Subbar />
-          <Search />
+          <Search dark={1} />
         </div>
       </div>
     </div>
